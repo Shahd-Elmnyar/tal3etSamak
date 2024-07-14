@@ -12,7 +12,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 
 class UpdatePasswordController extends Controller
 {
-    public function updatePassword(UpdatePasswordRequest $request)
+    public function store(UpdatePasswordRequest $request)
     {
         try {
             $user = User::where('email', $request->email)->first();

@@ -19,7 +19,7 @@ class ValidateOtpController extends Controller
         $this->otp = new Otp;
     }
 
-    public function validateOtp(ValidateOtpRequest $request)
+    public function store(ValidateOtpRequest $request)
     {
         try {
             $otpValidationResult = $this->otp->validate($request->email, $request->otp);
@@ -33,7 +33,7 @@ class ValidateOtpController extends Controller
 
             $user = User::where('email', $request->email)->first();
             if ($user) {
-                $user->otp_validated = true;
+                $user->update(['otp_validated' => true]); // Update the otp_validated attribute
             } else {
                 return response()->json([
                     'status' => 'error',

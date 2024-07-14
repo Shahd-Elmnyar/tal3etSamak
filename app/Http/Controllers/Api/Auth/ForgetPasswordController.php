@@ -13,7 +13,7 @@ use App\Notifications\ResetPasswordVerificationNotification;
 
 class ForgetPasswordController extends Controller
 {
-    public function forgetPassword(ForgetPasswordRequest $request)
+    public function store(ForgetPasswordRequest $request)
     {
         try {
             $user = User::where('email', $request->email)->first();

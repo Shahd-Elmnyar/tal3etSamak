@@ -17,10 +17,9 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request): JsonResponse
+    public function store(RegisterRequest $request): JsonResponse
     {
         // Log the incoming request data for debugging
-
 
         $userRole = Role::where('name', 'user')->first();
         if (!$userRole) {
@@ -54,34 +53,6 @@ class AuthController extends Controller
         }
     }
 
-    // public function logout(Request $request)
-    // {
-    //     // Check if user is authenticated
-    //     if (!$request->user()) {
-    //         return response()->json([
-    //             'code'=>'ERROR',
-    //             'data' => 'USER_NOT_AUTH'
-    //         ], 401);
-    //     }
-    //     try {
-    //         // Check if the current access token is valid
-    //         if ($request->user()->currentAccessToken()) {
-    //             $request->user()->currentAccessToken()->delete();
-    //         } else {
-    //             return response()->json([
-    //                 'code' =>'ERROR',
-    //                 'data'=>'INVALID_TOKEN',
-    //                 ], 401);
-    //         }
-    //         return response()->json([
-    //             "code" => 'SUCCESS',
-    //             'data'=>(object)[],
-    //             ], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['code' => 'ERROR: ' . $e->getMessage()], 500);
-    //     }
-    // }
-
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -113,4 +84,31 @@ class AuthController extends Controller
         }
     }
 
+    public function logout(Request $request)
+    {
+        // Check if user is authenticated
+        if (!$request->user()) {
+            return response()->json([
+                'code'=>'ERROR',
+                'data' => 'USER_NOT_AUTH'
+            ], 401);
+        }
+        try {
+            // Check if the current access token is valid
+            if ($request->user()->currentAccessToken()) {
+                $request->user()->currentAccessToken()->delete();
+            } else {
+                return response()->json([
+                    'code' =>'ERROR',
+                    'data'=>'INVALID_TOKEN',
+                    ], 401);
+            }
+            return response()->json([
+                "code" => 'SUCCESS',
+                'data'=>(object)[],
+                ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['code' => 'ERROR: ' . $e->getMessage()], 500);
+        }
+    }
 }

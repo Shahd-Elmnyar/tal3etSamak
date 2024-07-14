@@ -18,12 +18,14 @@ use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+// Use resource controllers
+Route::apiResource('auth', AuthController::class);
+Route::apiResource('validate-otp', ValidateOtpController::class);
+Route::apiResource('forget-password', ForgetPasswordController::class);
+Route::apiResource('update-password', UpdatePasswordController::class);
 
-// reset password OTP verification
-Route::post('/forget-password', [ForgetPasswordController::class, 'forgetPassword']);
-Route::post('/validate-otp', [ValidateOtpController::class, 'validateOtp']);
-Route::post('/reset-password', [UpdatePasswordController::class, 'updatePassword']);
-
+// Custom routes for login and logout within the AuthController
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/login', 'login')->name('login');
+    Route::post('/logout', 'logout')->middleware('auth:sanctum');
+});
