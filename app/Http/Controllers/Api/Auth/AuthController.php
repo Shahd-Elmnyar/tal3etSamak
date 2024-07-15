@@ -30,14 +30,7 @@ class AuthController extends Controller
         }
 
         try {
-            // dd($request->email);
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'password' => Hash::make($request->password),
-                'role_id' => $userRole->id,
-            ]);
+            $user = User::create($request->validated());
 
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
