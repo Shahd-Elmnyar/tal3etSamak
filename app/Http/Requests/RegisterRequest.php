@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -24,7 +25,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:4', 'max:255'],
+            'name_ar' => ['required', 'string', 'max:255'],
+            'name_en' => ['required', 'string', 'max:255'],
             'email' => 'required|email|unique:users',
             'phone' => ['required', 'string', 'min:10', 'max:15', 'unique:users'],
             'password' => [
@@ -54,6 +56,7 @@ class RegisterRequest extends FormRequest
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */
+
     protected function failedValidation(Validator $validator)
     {
         $response = response()->json([
@@ -63,5 +66,17 @@ class RegisterRequest extends FormRequest
         ], 422);
 
         throw new HttpResponseException($response);
+    }
+
+    public function validatedData()
+    {
+        $validated = $this->validated();
+        $validated['name'] = [
+            'ar' => $validated['name_ar'],
+            'en' => $validated['name_en']
+        ];
+        unset($validated['name_ar'], $validated['name_en']);
+
+        return $validated;
     }
 }

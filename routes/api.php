@@ -18,14 +18,15 @@ use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 |
 */
 
-// Use resource controllers
-Route::apiResource('auth', AuthController::class);
-Route::apiResource('validate-otp', ValidateOtpController::class);
-Route::apiResource('forget-password', ForgetPasswordController::class);
-Route::apiResource('update-password', UpdatePasswordController::class);
+Route::middleware('lang')->prefix('{locale}')->group(function () {
+    // Use resource controllers
+    Route::apiResource('auth', AuthController::class);
+    Route::apiResource('validate-otp', ValidateOtpController::class);
+    Route::apiResource('forget-password', ForgetPasswordController::class);
+    Route::apiResource('validate-otp', ValidateOtpController::class);
+    Route::apiResource('update-password', UpdatePasswordController::class);
 
-// Custom routes for login and logout within the AuthController
-Route::controller(AuthController::class)->group(function () {
-    Route::post('/login', 'login')->name('login');
-    Route::post('/logout', 'logout')->middleware('auth:sanctum');
+    // Custom routes for login and logout within the AuthController
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });

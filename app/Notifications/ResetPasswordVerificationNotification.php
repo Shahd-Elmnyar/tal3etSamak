@@ -44,19 +44,18 @@ class ResetPasswordVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        // Change the second parameter to a valid type string, e.g., 'numeric'
-        $otp = $this->otp->generate($notifiable->email, 'numeric',6, 60);
+        $otp = $this->otp->generate($notifiable->email, 'numeric', 6, 60);
         return (new MailMessage)
                 ->mailer('smtp')
                 ->subject($this->subject)
-                ->view('emails.reset_password',[
+                ->view('emails.reset_password', [
                     'otp' => $otp->token,
                     'username' => $notifiable->username
-                ]);
-                // ->greeting('hello ' . $notifiable->username)
-                // ->line($this->message)
-                // ->line('code: ' . $otp->token)
-                // ->salutation('Best regards, Store-ify Team');
+                ])
+                ->greeting('hello ' . $notifiable->username)
+                ->line($this->message)
+                ->line('code: ' . $otp->token)
+                ->salutation('Best regards, Store-ify Team');
     }
 
     /**

@@ -24,10 +24,9 @@ class ValidateOtpController extends Controller
         try {
             $otpValidationResult = $this->otp->validate($request->email, $request->otp);
             if (!$otpValidationResult->status) {
-                $msg = $otpValidationResult->message == "OTP is not valid" || $otpValidationResult->message == "OTP does not exist" ? 'INVALID_OTP' : $otpValidationResult->message;
                 return response()->json([
                     'status' => 'error',
-                    'message' => $msg
+                    'message' => $otpValidationResult->message,
                 ], 401);
             }
 
@@ -37,19 +36,19 @@ class ValidateOtpController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'User not found',
+                    'message' => __('auth.user_not_found'),
                 ], 404);
             }
             return response()->json([
                 'status' => 'success',
-                'message' =>'OTP validated successfully. Your account is now verified.'
+                'message' =>__('auth.otp_success'),
             ], 200);
         } catch (\Exception $e) {
             Log::error('Error during OTP validation process: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while validating the OTP. Please try again later.',
+                'message' => __('auth.error_occurred'),
             ], 500);
         }
     }

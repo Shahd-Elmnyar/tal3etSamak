@@ -19,7 +19,7 @@ class UpdatePasswordController extends Controller
             if (!$user || !$user->otp_validated) {
                 return response()->json([
                     'status' => 'error',
-                    'data' => 'The email or OTP provided is invalid. Please check and try again.'
+                    'data' => trans('auth.invalid_email_or_otp'),
                 ], 401);
             }
 
@@ -27,14 +27,14 @@ class UpdatePasswordController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'your password has been updated successfully',
+                'message' => __('auth.password_updated'),
             ], 200);
         } catch (\Exception $e) {
             Log::error('Error during password update process: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
-                'data' => 'An error occurred while updating the password. Please try again later.',
+                'data' => __('auth.error_occurred'),
             ], 500);
         }
     }

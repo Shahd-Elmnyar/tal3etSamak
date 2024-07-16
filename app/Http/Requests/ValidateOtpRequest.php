@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ValidateOtpRequest extends FormRequest
 {
@@ -26,4 +28,31 @@ class ValidateOtpRequest extends FormRequest
             'otp' =>['required' ,'max:6'],
         ];
     }
+
+    /**
+     * Get the custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     */
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = response()->json([
+            'status' => 'error',
+            'message' => "validation_error",
+            'errors' => $validator->errors(),
+        ], 422);
+
+        throw new HttpResponseException($response);
+    }
+
 }
