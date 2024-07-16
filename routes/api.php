@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
@@ -25,6 +26,8 @@ Route::middleware('lang')->prefix('{locale}')->group(function () {
     Route::apiResource('forget-password', ForgetPasswordController::class);
     Route::apiResource('validate-otp', ValidateOtpController::class);
     Route::apiResource('update-password', UpdatePasswordController::class);
+    Route::apiResource('/home', HomeController::class)->middleware('auth:sanctum')->only(['index']);
+
 
     // Custom routes for login and logout within the AuthController
     Route::post('login', [AuthController::class, 'login'])->name('login');

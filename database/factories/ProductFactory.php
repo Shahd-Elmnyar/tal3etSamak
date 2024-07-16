@@ -13,16 +13,18 @@ class ProductFactory extends Factory
 
     public function definition()
     {
+        static $i = 0;
+        $i++;
         return [
-            'name' => json_encode([
-                'en' => $this->faker->word,
-                'ar' => $this->faker->word,
-            ]),
-            'description' => json_encode([
+            'name' => [
+                'en' => $this->faker->name,
+                'ar' => $this->faker->name,
+            ],
+            'description' => ([
                 'en' => $this->faker->paragraph,
                 'ar' => $this->faker->paragraph,
             ]),
-            'img' => $this->faker->imageUrl,
+            'img' => $i . ".png",
             'price' => $this->faker->randomFloat(2, 10, 100),
             'offer_price' => $this->faker->randomFloat(2, 5, 50),
             'discount_type' => $this->faker->randomElement(['percent', 'value']),

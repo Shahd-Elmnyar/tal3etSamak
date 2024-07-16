@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         // Truncate tables
-        DB::table('users')->truncate();
+        // DB::table('users')->truncate();
         DB::table('categories')->truncate();
         DB::table('products')->truncate();
         DB::table('addresses')->truncate();
@@ -41,15 +41,15 @@ class DatabaseSeeder extends Seeder
         DB::table('carts')->truncate();
         DB::table('cart_items')->truncate();
         DB::table('order_details')->truncate();
-        DB::table('roles')->truncate();
+        // DB::table('roles')->truncate();
 
         // Re-enable foreign key checks
         Schema::enableForeignKeyConstraints();
 
         // Call individual seeders
         $this->call([
-            UserSeeder::class,
-            RoleSeeder::class,
+            // UserSeeder::class,
+            // RoleSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
             AddressSeeder::class,

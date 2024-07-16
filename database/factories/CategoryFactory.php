@@ -18,17 +18,20 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        static $i = 0;
+        $i++;
         return [
-            'name' => json_encode([
-                'en' => $this->faker->word,
-                'ar' => $this->faker->word,
+            'name' => ([
+                'en' => $this->faker->name,
+                'ar' =>  $this->faker->name,
             ]),
             'slug' => $this->faker->slug,
-            'content' => json_encode([
+            'content' => ([
                 'en' => $this->faker->paragraph,
                 'ar' => $this->faker->paragraph,
             ]),
-            'img' => $this->faker->imageUrl,
+            'img'
+            => $i . ".png",
             'status' => $this->faker->boolean,
             'parent_id' => null, // Default to no parent
         ];

@@ -12,13 +12,17 @@ class UserResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    // app/Http/Resources/UserResource.php
+
+    public function toArray($request): array
     {
+        $locale = app()->getLocale();
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $this->name[$locale] ?? $this->name['en'], // Default to English if locale is not found
             'email' => $this->email,
-            'phone'=>$this->phone,
+            'phone' => $this->phone,
         ];
     }
+
 }

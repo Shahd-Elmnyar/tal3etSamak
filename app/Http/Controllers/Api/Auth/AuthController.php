@@ -52,6 +52,7 @@ class AuthController extends Controller
 
         // Check if user exists and password matches
         if (!$user || !Hash::check($request->password, $user->password)) {
+            dd(Hash::make($request->password) , $user->password);
             return response()->json([
                 'status' => 'error',
                 'message' => 'validation_error',

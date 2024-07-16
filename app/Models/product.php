@@ -24,6 +24,10 @@ class Product extends Model
         'category_id',
         'size_id'
     ];
+    protected $casts = [
+        'description' => 'array',
+        'name' => 'array',
+    ];
 
     // Define the relationship with the Category model
     public function category()

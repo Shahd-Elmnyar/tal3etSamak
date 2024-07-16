@@ -19,6 +19,11 @@ class Category extends Model
         'parent_id'
     ];
 
+    protected $casts = [
+        'content' => 'array',
+        'name' => 'array',
+    ];
+
     // Define the self-referential relationship
     public function parent()
     {
