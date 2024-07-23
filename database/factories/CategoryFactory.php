@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CategoryFactory extends Factory
 {
+    protected $model = Category::class;
+
     /**
      * Define the model's default state.
      *
@@ -21,18 +23,17 @@ class CategoryFactory extends Factory
         static $i = 0;
         $i++;
         return [
-            'name' => ([
-                'en' => $this->faker->name,
-                'ar' =>  $this->faker->name,
+            'name' => json_encode([
+                'en' => $this->faker->word,
+                'ar' => $this->faker->word,
             ]),
-            'slug' => $this->faker->slug,
-            'content' => ([
+            'slug' => $this->faker->unique()->slug,
+            'content' => json_encode([
                 'en' => $this->faker->paragraph,
                 'ar' => $this->faker->paragraph,
             ]),
-            'img'
-            => $i . ".png",
-            'status' => $this->faker->boolean,
+            'img' => $i . ".png",
+            'active' => $this->faker->boolean ? 1 : 0,
             'parent_id' => null, // Default to no parent
         ];
     }

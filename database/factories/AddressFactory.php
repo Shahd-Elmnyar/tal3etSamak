@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
 use App\Models\User;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -13,14 +14,18 @@ class AddressFactory extends Factory
     public function definition()
     {
         return [
-            'address' => json_encode( [
-                'en' => $this->faker->address,
-                'ar' => $this->faker->address,
+            'name' => json_encode([
+                'en' => $this->faker->word,
+                'ar' => $this->faker->word,
             ]),
-            'details' => json_encode([
-                'en' => $this->faker->optional()->text,
-                'ar' => $this->faker->optional()->text,
+            'content' => json_encode([
+                'en' => $this->faker->paragraph,
+                'ar' => $this->faker->paragraph,
             ]),
+            // 'details' => json_encode([
+            //     'en' => $this->faker->optional()->text,
+            //     'ar' => $this->faker->optional()->text,
+            // ]),
             'building' => json_encode([
                 'en' => $this->faker->optional()->buildingNumber,
                 'ar' => $this->faker->optional()->buildingNumber,
@@ -45,9 +50,15 @@ class AddressFactory extends Factory
                 'en' => $this->faker->city,
                 'ar' => $this->faker->city,
             ]),
+            'geo_address' => json_encode([
+                'en' => $this->faker->address,
+                'ar' => $this->faker->address,
+            ]),
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
-            'user_id' =>User::factory(),
+            'active' => $this->faker->boolean ? 1 : 0,
+            'user_id' => User::factory(),
+            'city_id' =>City::factory(),
         ];
     }
 }

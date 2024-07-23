@@ -15,7 +15,7 @@ class Category extends Model
         'slug',
         'content',
         'img',
-        'status',
+        'active',
         'parent_id'
     ];
 
@@ -34,8 +34,10 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsToMany(Product::class, 'product_category', 'category_id', 'product_id')
+            ->withTimestamps();
     }
 }

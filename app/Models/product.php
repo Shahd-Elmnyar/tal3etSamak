@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -18,11 +19,12 @@ class Product extends Model
         'offer_price',
         'discount_type',
         'discount',
-        'offer',
-        'sale',
+        'is_offer',
+        'is_sale',
         'active',
         'category_id',
         'size_id'
+
     ];
     protected $casts = [
         'description' => 'array',
@@ -30,9 +32,10 @@ class Product extends Model
     ];
 
     // Define the relationship with the Category model
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'product_category', 'category_id', 'product_id')
+        ->withTimestamps();
     }
 
     // Define the relationship with the Size model
@@ -56,5 +59,31 @@ class Product extends Model
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
+    }
+    public function images(){
+        return $this->hasMany(Image::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function rates(){
+        return $this->hasMany(Rate::class);
+    }
+    public function additions()
+    {
+        return $this->belongsToMany(Addition::class, 'product_addition', 'addition_id', 'product_id')
+        ->withTimestamps();
+    }
+
+    public static function getTotalQuantities()
+    {
+        return self::select('products.*', DB::raw('SUM(order_items.quantity) as total_quantity'))
+            ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+            ->groupBy('products.id', 'products.name', 'products.description', 'products.img', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.offer', 'products.sale', 'products.active', 'products.category_id', 'products.size_id', 'products.created_at', 'products.updated_at')
+            ->orderByDesc('total_quantity')
+            ->limit(2)
+            ->get();
+
     }
 }

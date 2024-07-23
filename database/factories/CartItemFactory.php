@@ -20,7 +20,7 @@ class CartItemFactory extends Factory
             'total' => function (array $attributes) {
                 return $attributes['quantity'] * $attributes['price'];
             },
-            'state' => $this->faker->boolean,
+            'active' => $this->faker->boolean,
             'cart_id' =>Cart::factory(),
             'product_id' =>Product::factory(),
             'size_id' =>Size::factory(),

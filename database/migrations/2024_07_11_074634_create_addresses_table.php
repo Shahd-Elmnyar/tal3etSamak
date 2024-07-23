@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('address');
-            $table->text('details')->nullable();
+            $table->mediumText('name');
+            $table->mediumText('content')->nullable();
             $table->string('building')->nullable();
             $table->string('floor')->nullable();
             $table->string('apartment')->nullable();
             $table->string('type');
-            $table->text('information')->nullable();
-            $table->string('city_of_residence');
+            $table->tinyInteger('active')->default(1);
+            $table->mediumText('information')->nullable();
+            $table->string('city_of_residence')->nullable();
+            $table->mediumText('geo_address')->nullable();
             $table->decimal('longitude', 10, 7);
             $table->decimal('latitude', 10, 7);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('city_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

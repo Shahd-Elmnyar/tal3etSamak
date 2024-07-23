@@ -27,29 +27,29 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Disable foreign key checks
-        Schema::disableForeignKeyConstraints();
+        // Schema::disableForeignKeyConstraints();
 
         // Truncate tables
         // DB::table('users')->truncate();
-        DB::table('categories')->truncate();
-        DB::table('products')->truncate();
-        DB::table('addresses')->truncate();
-        DB::table('payments')->truncate();
-        DB::table('favorites')->truncate();
-        DB::table('orders')->truncate();
-        DB::table('order_items')->truncate();
-        DB::table('carts')->truncate();
-        DB::table('cart_items')->truncate();
-        DB::table('order_details')->truncate();
+        // DB::table('categories')->truncate();
+        // DB::table('products')->truncate();
+        // DB::table('addresses')->truncate();
+        // DB::table('payments')->truncate();
+        // DB::table('favorites')->truncate();
+        // DB::table('orders')->truncate();
+        // DB::table('order_items')->truncate();
+        // DB::table('carts')->truncate();
+        // DB::table('cart_items')->truncate();
+        // DB::table('order_details')->truncate();
         // DB::table('roles')->truncate();
 
         // Re-enable foreign key checks
-        Schema::enableForeignKeyConstraints();
+        // Schema::enableForeignKeyConstraints();
 
         // Call individual seeders
         $this->call([
-            // UserSeeder::class,
-            // RoleSeeder::class,
+            UserSeeder::class,
+            RoleSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
             AddressSeeder::class,
@@ -60,6 +60,12 @@ class DatabaseSeeder extends Seeder
             CartSeeder::class,
             CartItemSeeder::class,
             OrderDetailSeeder::class,
+            AdditionSeeder::class,
+            SizeSeeder::class,
+            CitySeeder::class,
+            ImageSeeder::class,
+            RateSeeder::class,
+            ReviewSeeder::class
         ]);
     }
 }

@@ -11,7 +11,7 @@ class Size extends Model
 
     // Add the fillable property
     protected $fillable = [
-        'size'
+        'name'
     ];
 
     public function products()

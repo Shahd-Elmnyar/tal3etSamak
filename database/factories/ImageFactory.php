@@ -2,16 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Size;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Size>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Image>
  */
-class SizeFactory extends Factory
+class ImageFactory extends Factory
 {
-    protected $model = Size::class;
-
     /**
      * Define the model's default state.
      *
@@ -19,8 +16,10 @@ class SizeFactory extends Factory
      */
     public function definition(): array
     {
+        static $i = 0;
+        $i++;
         return [
-            'name' => $this->faker->word,
+            'name' => $i . ".png",
         ];
     }
 }

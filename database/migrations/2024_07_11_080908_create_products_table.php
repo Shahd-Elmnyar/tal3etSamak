@@ -13,18 +13,21 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->string('img');
-            $table->decimal('price', 8, 2);
-            $table->decimal('offer_price', 8, 2);
-            $table->enum('discount_type', ['percent', 'value']);
-            $table->integer('discount')->nullable();
-            $table->boolean('offer')->default(0);
-            $table->boolean('sale')->default(0);
-            $table->boolean('active')->default(1);
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('size_id')->constrained()->onDelete('cascade');
+            $table->mediumText('name');
+            $table->mediumText('description');
+            $table->double('price');
+            $table->double('offer_price')->nullable();
+            $table->double('start')->nullable();
+            $table->double('skip')->nullable();
+            $table->string('discount_type');
+            $table->double('discount')->nullable();
+            $table->boolean('is_offer')->default(0);
+            $table->boolean('is_sale')->default(0);
+            $table->tinyInteger('active')->default(1);
+            // $table->foreignId('addition_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreignId('category_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('size_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('image_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

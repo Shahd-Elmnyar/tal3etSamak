@@ -20,7 +20,7 @@ class OrderItemFactory extends Factory
             'total' => function (array $attributes) {
                 return $attributes['quantity'] * $attributes['price'];
             },
-            'state' => $this->faker->boolean,
+            // 'state' => $this->faker->boolean,
             'product_id' =>Product::factory(),
             'order_id' =>Order::factory(),
             'size_id' =>Size::factory(),

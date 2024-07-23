@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone');
-            $table->string('email');
+            $table->mediumText('name');
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->string('address');
             $table->string('address_type');
-            $table->enum('order_type', ['delivery', 'restaurant']);
-            $table->foreignId('payment_id')->constrained()->onDelete('cascade');
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('address_id')->constrained()->onDelete('cascade');
+            $table->string('order_type');
+            $table->string('prepare_time')->nullable();
+            $table->foreignId('payment_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('address_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
