@@ -31,4 +31,8 @@ return [
     'user_not_found' => 'We could not find a user with that email address.',
     'otp_success'=> 'OTP validated successfully. Your account is now verified.',
     'otp_not_exist' => 'The OTP does not exist.',
+    'notification_success' => 'Notification sent successfully.',
+    'logged_out'=>'You have successfully logged out.',
+    'user_created' => 'User created successfully.',
+    'user_login' => 'User logged in successfully.',
 ];
