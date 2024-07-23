@@ -15,14 +15,19 @@ class CategoryResource extends JsonResource
     public function toArray(Request $request): array
     {
         $locale = app()->getLocale();
+
+        // Decode the JSON string into an array
+        $name = json_decode($this->name, true);
+        $content = json_decode($this->content, true);
+
         return [
             'id' => $this->id,
-            'name' => $this->name[$locale] ?? $this->name['en'],
+            'name' => is_array($name) ? ($name[$locale] ?? $name['en']) : $this->name,
             'slug' => $this->slug,
-            'content' => $this->content[$locale] ?? $this->content['en'],
+            'content' => is_array($content) ? ($content[$locale] ?? $content['en']) : $this->content,
             'img' => $this->img,
             'status' => $this->status,
             'parent_id' => $this->parent_id,
-            ];
+        ];
     }
 }

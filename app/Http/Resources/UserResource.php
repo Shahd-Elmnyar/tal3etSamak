@@ -19,7 +19,7 @@ class UserResource extends JsonResource
         $locale = app()->getLocale();
         return [
             'id' => $this->id,
-            'name' => $this->name[$locale] ?? $this->name['en'], // Default to English if locale is not found
+            'name' => is_array($this->name) ? ($this->name[$locale] ?? $this->name['en']) : $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
         ];
