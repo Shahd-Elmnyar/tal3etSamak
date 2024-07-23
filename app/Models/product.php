@@ -80,7 +80,7 @@ class Product extends Model
     {
         return self::select('products.*', DB::raw('SUM(order_items.quantity) as total_quantity'))
             ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
-            ->groupBy('products.id', 'products.name', 'products.description', 'products.img', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.offer', 'products.sale', 'products.active', 'products.category_id', 'products.size_id', 'products.created_at', 'products.updated_at')
+            ->groupBy('products.id', 'products.name', 'products.image_id', 'products.description', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.is_offer', 'products.is_sale', 'products.active', 'products.size_id', 'products.start', 'products.skip', 'products.created_at', 'products.updated_at')
             ->orderByDesc('total_quantity')
             ->limit(2)
             ->get();

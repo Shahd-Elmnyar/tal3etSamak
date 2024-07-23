@@ -18,42 +18,26 @@ class AddressFactory extends Factory
                 'en' => $this->faker->word,
                 'ar' => $this->faker->word,
             ]),
-            'content' => json_encode([
-                'en' => $this->faker->paragraph,
-                'ar' => $this->faker->paragraph,
-            ]),
+            'content' =>$this->faker->paragraph,
+
             // 'details' => json_encode([
             //     'en' => $this->faker->optional()->text,
             //     'ar' => $this->faker->optional()->text,
             // ]),
-            'building' => json_encode([
-                'en' => $this->faker->optional()->buildingNumber,
-                'ar' => $this->faker->optional()->buildingNumber,
-            ]),
-            'floor' => json_encode([
-                'en' => $this->faker->optional()->randomDigitNotNull,
-                'ar' => $this->faker->optional()->randomDigitNotNull,
-            ]),
-            'apartment' => json_encode([
-                'en' => $this->faker->optional()->randomDigitNotNull,
-                'ar' => $this->faker->optional()->randomDigitNotNull,
-            ]),
-            'type' => json_encode([
-                'en' => $this->faker->word,
-                'ar' => $this->faker->word,
-            ]),
-            'information' => json_encode([
-                'en' => $this->faker->optional()->text,
-                'ar' => $this->faker->optional()->text,
-            ]),
-            'city_of_residence' => json_encode([
-                'en' => $this->faker->city,
-                'ar' => $this->faker->city,
-            ]),
-            'geo_address' => json_encode([
-                'en' => $this->faker->address,
-                'ar' => $this->faker->address,
-            ]),
+            'building' =>$this->faker->optional()->buildingNumber,
+
+            'floor' => $this->faker->optional()->randomDigitNotNull,
+
+            'apartment' =>$this->faker->optional()->randomDigitNotNull,
+
+            'type' =>$this->faker->word,
+
+            'information' => $this->faker->optional()->text,
+
+            'city_of_residence' => $this->faker->city,
+
+            'geo_address' => $this->faker->address,
+            
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
             'active' => $this->faker->boolean ? 1 : 0,

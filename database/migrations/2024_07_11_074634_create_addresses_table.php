@@ -18,14 +18,14 @@ return new class extends Migration
             $table->string('building')->nullable();
             $table->string('floor')->nullable();
             $table->string('apartment')->nullable();
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->mediumText('information')->nullable();
             $table->string('city_of_residence')->nullable();
             $table->mediumText('geo_address')->nullable();
-            $table->decimal('longitude', 10, 7);
-            $table->decimal('latitude', 10, 7);
-            $table->foreignId('city_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->foreignId('city_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

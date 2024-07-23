@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->boolean('otp_validated')->default(false);
+            $table->string('lang')->default('en');
             // $table->foreignId('address_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->rememberToken();
             $table->timestamps();
