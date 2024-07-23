@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Size;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class SizeFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
+            'product_id' => Product::factory(),
         ];
     }
 }

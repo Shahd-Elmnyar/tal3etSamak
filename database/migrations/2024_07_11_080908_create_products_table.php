@@ -26,8 +26,8 @@ return new class extends Migration
             $table->tinyInteger('active')->default(1);
             // $table->foreignId('addition_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             // $table->foreignId('category_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('size_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('image_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreignId('size_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreignId('image_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

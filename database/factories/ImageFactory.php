@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,7 @@ class ImageFactory extends Factory
         $i++;
         return [
             'name' => $i . ".png",
+            'product_id' => Product::factory(),
         ];
     }
 }

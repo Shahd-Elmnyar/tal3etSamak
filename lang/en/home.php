@@ -8,4 +8,5 @@ return [
     'address_created' => 'Address created successfully',
     'home_success' =>'home data returned successfully',
     'address_created' => 'Address created successfully',
+    'product_not_found' => 'Product not found',
 ];

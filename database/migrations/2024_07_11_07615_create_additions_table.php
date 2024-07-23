@@ -18,7 +18,8 @@ return new class extends Migration
             $table->mediumText('content');
             $table->string('img');
             $table->tinyInteger('active')->default(1);
-
+            $table->double('price');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

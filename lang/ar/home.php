@@ -8,4 +8,6 @@ return [
     'address_created' => 'تمت اضافة العنوان بنجاح',
     'home_success' => 'تم استرجاع البيانات بنجاح',
     'address_created' => 'تمت اضافة العنوان بنجاح',
+    'product_not_found' => 'المنتج غير موجود',
+
 ];

@@ -33,8 +33,8 @@ class ProductFactory extends Factory
             'is_sale' => $this->faker->boolean,
             'active' => $this->faker->boolean,
             // 'additionn_id' => Category::factory(),
-            'size_id' => Size::factory(),
-            'image_id' => Image::factory(),
+            // 'size_id' => Size::factory(),
+            // 'image_id' => Image::factory(),
         ];
     }
 }

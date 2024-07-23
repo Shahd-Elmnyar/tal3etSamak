@@ -22,9 +22,6 @@ class Product extends Model
         'is_offer',
         'is_sale',
         'active',
-        'category_id',
-        'size_id'
-
     ];
     protected $casts = [
         'description' => 'array',
@@ -34,15 +31,10 @@ class Product extends Model
     // Define the relationship with the Category model
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'product_category', 'category_id', 'product_id')
-        ->withTimestamps();
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id')
+            ->withTimestamps();
     }
 
-    // Define the relationship with the Size model
-    public function size()
-    {
-        return $this->belongsTo(Size::class);
-    }
 
     // Define the relationship with the Order model
     public function orderItem()
@@ -60,30 +52,37 @@ class Product extends Model
     {
         return $this->hasMany(Favorite::class);
     }
-    public function images(){
+    public function images()
+    {
         return $this->hasMany(Image::class);
+    }
+    // Define the relationship with the Size model
+    public function sizes()
+    {
+        return $this->hasMany(Size::class);
     }
     public function reviews()
     {
         return $this->hasMany(Review::class);
     }
-    public function rates(){
+    public function rates()
+    {
         return $this->hasMany(Rate::class);
     }
     public function additions()
     {
-        return $this->belongsToMany(Addition::class, 'product_addition', 'addition_id', 'product_id')
-        ->withTimestamps();
+        return $this->belongsToMany(Addition::class, 'product_addition', 'product_id', 'addition_id')
+            ->withTimestamps();
     }
 
     public static function getTotalQuantities()
     {
         return self::select('products.*', DB::raw('SUM(order_items.quantity) as total_quantity'))
             ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
-            ->groupBy('products.id', 'products.name', 'products.image_id', 'products.description', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.is_offer', 'products.is_sale', 'products.active', 'products.size_id', 'products.start', 'products.skip', 'products.created_at', 'products.updated_at')
+            ->groupBy('products.id', 'products.name', 'products.description', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.is_offer', 'products.is_sale', 'products.active', 'products.start', 'products.skip', 'products.created_at', 'products.updated_at')
             ->orderByDesc('total_quantity')
             ->limit(2)
+            ->with(['additions', 'images', 'sizes', 'categories'])
             ->get();
-
     }
 }
