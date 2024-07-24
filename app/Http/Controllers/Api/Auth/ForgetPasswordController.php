@@ -20,21 +20,21 @@ class ForgetPasswordController  extends MainController
         try {
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return $this->notFoundResponse(__('auth.user_not_found'));
+                return $this->notFoundResponse( 'auth.user_not_found');
             }
 
             // Send the notification
             $notification = new ResetPasswordVerificationNotification();
             if (!$user->notify($notification)) {
-                return $this->successResponse(__('auth.notification_success'));
+                return $this->successResponse( 'auth.notification_success');
             } else {
                 Log::error('Failed to send notification to user: ' . $user->email);
-                return $this->genericErrorResponse(__('home.notification_failed'));
+                return $this->genericErrorResponse( 'home.notification_failed');
             }
         } catch (\Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
 
-            return $this->genericErrorResponse(__('auth.error_occurred', ['error' => $e->getMessage()]));
+            return $this->genericErrorResponse( 'auth.error_occurred', ['error' => $e->getMessage()]);
         }
     }
 }

@@ -18,16 +18,16 @@ class UpdatePasswordController  extends MainController
         try {
             $user = User::where('email', $request->email)->first();
             if (!$user || !$user->otp_validated) {
-                return $this->notFoundResponse(__('auth.invalid_email_or_otp'));
+                return $this->notFoundResponse( 'auth.invalid_email_or_otp');
             }
 
             $user->update(['password' => Hash::make($request->password), 'otp_validated' => false]);
 
-            return $this->successResponse(__('auth.password_updated'));
+            return $this->successResponse( 'auth.password_updated');
         } catch (\Exception $e) {
             Log::error('Error during password update process: ' . $e->getMessage());
 
-            return $this->genericErrorResponse(__('auth.error_occurred', ['error' => $e->getMessage()]));
+            return $this->genericErrorResponse( 'auth.error_occurred', ['error' => $e->getMessage()]);
         }
     }
 }

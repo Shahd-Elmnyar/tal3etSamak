@@ -32,13 +32,13 @@ class ValidateOtpController  extends MainController
             if ($user) {
                 $user->update(['otp_validated' => true]); // Update the otp_validated attribute
             } else {
-                return $this->notFoundResponse(__('auth.user_not_found'));
+                return $this->notFoundResponse( 'auth.user_not_found');
             }
-            return $this->successResponse(__('auth.otp_success'));
+            return $this->successResponse( 'auth.otp_success');
         } catch (\Exception $e) {
             Log::error('Error during OTP validation process: ' . $e->getMessage());
 
-            return $this->genericErrorResponse(__('auth.error_occurred', ['error' => $e->getMessage()]));
+            return $this->genericErrorResponse( 'auth.error_occurred', ['error' => $e->getMessage()]);
         }
     }
 }

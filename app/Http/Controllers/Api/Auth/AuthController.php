@@ -24,18 +24,18 @@ class AuthController  extends MainController
     {
         $userRole = Role::where('name', 'user')->first();
         if (!$userRole) {
-            return $this->notFoundResponse((object)['user_role' => __('auth.user_role_not_found')],);
+            return $this->notFoundResponse((object)['user_role' => 'auth.user_role_not_found']);
         }
 
         try {
             $user = User::create($request->validatedData());
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-            return $this->successResponse(__('auth.user_created'), (object)['token' => $token, 'user_data' => $userData]);
+            return $this->successResponse('auth.user_created', (object)['token' => $token, 'user_data' => $userData]);
         } catch (QueryException $e) {
-            return $this->genericErrorResponse(__('auth.database_error', ['error' => $e->getMessage()]));
+            return $this->genericErrorResponse('auth.database_error', ['error' => $e->getMessage()]);
         } catch (\Exception $e) {
-            return $this->genericErrorResponse(__('auth.error_occurred', ['error' => $e->getMessage()]));
+            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
         }
     }
 
@@ -45,34 +45,34 @@ class AuthController  extends MainController
 
         // Check if user exists and password matches
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->validationErrorResponse((object)['credential' => __('auth.invalid_credentials')]);
+            return $this->validationErrorResponse((object)['credential' => 'auth.invalid_credentials']);
         }
 
         try {
             // Generate and return token on successful login
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-            return $this->successResponse(__('auth.user_login'), (object)['token' => $token, 'user_data' => $userData]);
+            return $this->successResponse('auth.user_login', (object)['token' => $token, 'user_data' => $userData]);
         } catch (\Exception $e) {
             // Handle any unexpected exceptions during token creation
-            return $this->genericErrorResponse(__('auth.login_error'));
+            return $this->genericErrorResponse('auth.login_error');
         }
     }
 
     public function logout(Request $request)
     {
         // Check if user is authenticated
-        $user = $this->checkAuthorization($request);
+
         try {
             // Check if the current access token is valid
             if ($request->user()->currentAccessToken()) {
                 $request->user()->currentAccessToken()->delete();
             } else {
-                return $this->unauthorizedResponse(__('auth.invalid_token'));
+                return $this->unauthorizedResponse('auth.invalid_token');
             }
-            return $this->successResponse(__('auth.logged_out'));
+            return $this->successResponse('auth.logged_out');
         } catch (\Exception $e) {
-            return $this->genericErrorResponse(__('auth.error_occurred', ['error' => $e->getMessage()]));
+            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
         }
     }
 }
