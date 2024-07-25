@@ -9,31 +9,17 @@ use Illuminate\Http\Request;
 use App\Http\Resources\MenuResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
-use App\Http\Controllers\Api\MainController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 
 class CategoryController extends AppController
 {
 
-
-    /**
-     * Fetch all categories along with their parent and children.
-     */
     public function index(Request $request)
     {
         try {
-            // Get main categories (those having children)
-            $mainCategories = Category::with(['children'])
-                ->whereHas('children')
-                ->paginate(3);
-
-            // Get sub categories (those having parents)
-            $subCategories = Category::with(['parent'])
-                ->whereHas('parent')
-                ->paginate(3);
-
-            // Get products (assuming your getProducts() method handles this)
+            $mainCategories = $this->getMainCategories();
+            $subCategories = $this->getSubCategories();
             $products = $this->getProducts();
 
             return $this->successResponse(
@@ -52,48 +38,38 @@ class CategoryController extends AppController
         }
     }
 
-    /**
-     * Fetch a specific category and its children, including parent as a collection.
-     */
+
+    private function getMainCategories()
+    {
+        return Category::with(['children'])
+            ->whereDoesntHave('parent')
+            ->all();
+    }
+
+    private function getSubCategories()
+    {
+        return Category::with(['parent'])
+            ->whereHas('parent')
+            ->all();
+    }
     public function show(Request $request, $id, $subCategoryId = null)
     {
         try {
-            // Fetch the main category with its children and products
-            $category = Category::with(['parent', 'children', 'products'])->findOrFail($id);
+            $category = $this->getCategoryWithRelations($id);
 
             if ($subCategoryId) {
-                // Fetch the specific subcategory under the main category with its products
-                $subCategory = $category->children()->with(['products.images', 'products.sizes', 'products.additions'])
-                    ->findOrFail($subCategoryId);
-
+                $subCategory = $this->getSubCategoryWithRelations($category, $subCategoryId);
                 return $this->successResponse(
                     __('home.home_success'),
-                    [
-                        'category' => new MenuResource($subCategory),
-                    ]
+                    ['category' => new MenuResource($subCategory)]
                 );
             }
 
-            // Get all products from the main category and its children
-            $childCategoryIds = $category->children->pluck('id');
-            $allProductIds = $category->products->pluck('id')
-                ->merge(
-                    Product::whereIn('id', function ($query) use ($childCategoryIds) {
-                        $query->select('product_id')
-                            ->from('product_category')
-                            ->whereIn('category_id', $childCategoryIds);
-                    })->pluck('id')
-                )->unique();
-
-            $products = Product::whereIn('id', $allProductIds)
-                ->with(['images', 'sizes', 'additions']) // Eager load related data
-                ->paginate(6);
+            $products = $this->getProductsForCategory($category);
 
             return $this->successResponse(
                 __('home.home_success'),
-                [
-                    'category' => new MenuResource($category->setRelation('products', $products)),
-                ]
+                ['category' => new MenuResource($category->setRelation('products', $products))]
             );
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse(__('errors.category_not_found'));
@@ -102,11 +78,32 @@ class CategoryController extends AppController
         }
     }
 
-    /**
-     * Get products with their images, sizes, and additions.
-     */
-    private function getProducts()
+    private function getCategoryWithRelations($id)
     {
-        return Product::with(['images', 'sizes', 'additions'])->paginate(6);
+        return Category::with(['parent', 'children', 'products'])->findOrFail($id);
+    }
+
+
+    private function getSubCategoryWithRelations($category, $subCategoryId)
+    {
+        return $category->children()->with(['products.images', 'products.sizes', 'products.additions'])
+            ->findOrFail($subCategoryId);
+    }
+
+    private function getProductsForCategory($category)
+    {
+        $childCategoryIds = $category->children->pluck('id');
+        $allProductIds = $category->products->pluck('id')
+            ->merge(
+                Product::whereIn('id', function ($query) use ($childCategoryIds) {
+                    $query->select('product_id')
+                        ->from('product_category')
+                        ->whereIn('category_id', $childCategoryIds);
+                })->pluck('id')
+            )->unique();
+
+        return Product::whereIn('id', $allProductIds)
+            ->with(['images', 'sizes', 'additions'])
+            ->paginate(6);
     }
 }
