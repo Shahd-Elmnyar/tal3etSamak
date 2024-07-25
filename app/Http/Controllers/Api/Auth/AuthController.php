@@ -55,7 +55,7 @@ class AuthController  extends MainController
             return $this->successResponse('auth.user_login', (object)['token' => $token, 'user_data' => $userData]);
         } catch (\Exception $e) {
             // Handle any unexpected exceptions during token creation
-            return $this->genericErrorResponse('auth.login_error');
+            return $this->genericErrorResponse('auth.login_error', ['error' => $e->getMessage()]);
         }
     }
 

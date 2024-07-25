@@ -18,8 +18,9 @@ class CartItemFactory extends Factory
             'quantity' => $this->faker->numberBetween(1, 10),
             'price' => $this->faker->randomFloat(2, 1, 100),
             'total' => function (array $attributes) {
-                return $attributes['quantity'] * $attributes['price'];
+                return $attributes['quantity'] * $attributes['price'] + $attributes['total_addition_price'];
             },
+            'total_addition_price' => $this->faker->randomFloat(2, 1, 100),
             'active' => $this->faker->boolean,
             'cart_id' =>Cart::factory(),
             'product_id' =>Product::factory(),

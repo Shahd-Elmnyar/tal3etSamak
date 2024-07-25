@@ -74,4 +74,10 @@ class User extends Authenticatable implements LaratrustUser
     {
         $this->attributes['password'] = Hash::make($password);
     }
+    public function productAdditions()
+    {
+        return $this->belongsToMany(Product::class, 'user_product_addition')
+        ->withPivot('addition_id', 'quantity')
+        ->withTimestamps();
+    }
 }

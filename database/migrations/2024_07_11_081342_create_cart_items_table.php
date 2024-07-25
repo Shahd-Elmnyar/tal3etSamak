@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->double('price');
             $table->double('total');
+            $table->double('total_addition_price')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->foreignId('cart_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade')->onUpdate('cascade');

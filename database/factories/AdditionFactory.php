@@ -31,7 +31,7 @@ class AdditionFactory extends Factory
             'img' => $i . ".png",
             'active' => $this->faker->boolean ? 1 : 0,
             'price' => $this->faker->randomFloat(2, 10, 100),
-            'quantity' => $this->faker->numberBetween(1, 100),
+            // 'quantity' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

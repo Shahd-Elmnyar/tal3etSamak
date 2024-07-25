@@ -28,7 +28,6 @@ class AdditionResource extends JsonResource
             'img' => url('uploads/' . $this->img),
             'active' => $this->active,
             'price' => $this->price,
-            'quantity' => $this->quantity,
         ];
     }
 }

@@ -14,6 +14,7 @@ class Addition extends Model
         'content',
         'img',
         'active',
+        'price',
     ];
 
     protected $casts = [
@@ -23,6 +24,12 @@ class Addition extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_addition', 'product_id', 'addition_id')
+        ->withTimestamps();
+    }
+    public function userProducts()
+    {
+        return $this->belongsToMany(User::class, 'user_product_addition')
+        ->withPivot('product_id', 'quantity')
         ->withTimestamps();
     }
 }
