@@ -24,14 +24,15 @@ use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 |
 */
 
-Route::apiResource('auth', AuthController::class);
-Route::apiResource('validate-otp', ValidateOtpController::class);
-Route::apiResource('forget-password', ForgetPasswordController::class);
-Route::apiResource('update-password', UpdatePasswordController::class);
-Route::post('login', [AuthController::class, 'login'])->name('login');
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('lang')->group(function () {
+    Route::apiResource('auth', AuthController::class);
+    Route::apiResource('validate-otp', ValidateOtpController::class);
+    Route::apiResource('forget-password', ForgetPasswordController::class);
+    Route::apiResource('update-password', UpdatePasswordController::class);
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/home', HomeController::class)->only(['index']);
         Route::apiResource('/products', ProductController::class)->only(['index', 'show']);
@@ -41,6 +42,6 @@ Route::middleware('lang')->group(function () {
         Route::get('/menu/{main_category_id}/{sub_category_id?}', [CategoryController::class, 'show']);
         Route::apiResource('/address', AddressController::class)->only(['store']);
         Route::apiResource('additions/{product_id}', AdditionController::class)->only(['index']);
-        Route::post('totalAdditions/{product_id}', [AdditionController::class,'totalAdditions']);
+        Route::post('totalAdditions/{product_id}', [AdditionController::class, 'addAdditionToCart']);
     });
 });

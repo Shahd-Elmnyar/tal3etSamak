@@ -9,4 +9,5 @@ return [
     'home_success' =>'home data returned successfully',
     'address_created' => 'Address created successfully',
     'product_not_found' => 'Product not found',
+    'add_product_to_cart_success' => 'Product added to cart successfully',
 ];

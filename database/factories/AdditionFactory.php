@@ -19,12 +19,12 @@ class AdditionFactory extends Factory
         static $i = 0;
         $i++;
         return [
-            'name' => json_encode([
+            'name' => ([
                 'en' => $this->faker->sentence,
                 'ar' => $this->faker->sentence,
             ]),
             'slug' => $this->faker->unique()->slug,
-            'content' => json_encode([
+            'content' => ([
                 'en' => $this->faker->paragraph,
                 'ar' => $this->faker->paragraph,
             ]),

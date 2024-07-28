@@ -9,5 +9,6 @@ return [
     'home_success' => 'تم استرجاع البيانات بنجاح',
     'address_created' => 'تمت اضافة العنوان بنجاح',
     'product_not_found' => 'المنتج غير موجود',
+    'add_product_to_cart_success' => 'تمت اضافة المنتج الى السلة بنجاح',
 
 ];

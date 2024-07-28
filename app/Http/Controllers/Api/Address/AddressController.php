@@ -16,7 +16,10 @@ class AddressController extends AppController
             $addressData = $request->validated();
             $addressData['user_id'] = $this->user->id; // Ensure user_id is set
             $address = Address::create($addressData);
+
+
             $addressData = new AddressResource($address);
+
             return $this->successResponse('home.address_created', $addressData);
         } catch (QueryException $e) {
             return $this->genericErrorResponse('auth.database_error', ['error' => $e->getMessage()]);

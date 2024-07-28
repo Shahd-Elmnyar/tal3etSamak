@@ -20,7 +20,7 @@ class ProductFactory extends Factory
                 'en' => $this->faker->name,
                 'ar' => $this->faker->name,
             ],
-            'description' => ([
+            'content' => ([
                 'en' => $this->faker->paragraph,
                 'ar' => $this->faker->paragraph,
             ]),

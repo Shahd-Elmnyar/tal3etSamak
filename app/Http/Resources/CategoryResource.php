@@ -3,33 +3,28 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends JsonResource
+class CategoryResource extends MainResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    protected function transformData(array $data): array
     {
-        $locale = app()->getLocale();
-
-        // Check if $this->name and $this->content are strings before decoding
-        $name = is_string($this->name) ? json_decode($this->name, true) : $this->name;
-        $content = is_string($this->content) ? json_decode($this->content, true) : $this->content;
+        // $data = parent::toArray($request);
 
         return [
-            'id' => $this->id,
-            'name' => is_array($name) ? ($name[$locale] ?? $name['en']) : $this->name,
-            'slug' => $this->slug,
-            'content' => is_array($content) ? ($content[$locale] ?? $content['en']) : $this->content,
-            'img' => url('uploads/' . $this->img),
-            'active' => $this->active,
-            'parent' => new CategoryResource($this->whenLoaded('parent')),
-            'children' => CategoryResource::collection($this->whenLoaded('children')),
-            // 'products' => ProductResource::collection($this->whenLoaded('products')),
+            'id' => $data['id'],
+            'name' => $data['name'],
+            'slug' => $data['slug'],
+            'content' => $data['content'],
+            'img' => url('uploads/' . $data['img']),
+            'active' => $data['active'],
+            'parent' => isset($data['parent']) ? new CategoryResource($this->whenLoaded('parent')) : null,
+            'children' => isset($data['children']) ? CategoryResource::collection($this->whenLoaded('children')) : null,
+            'products' => isset($data['products']) ? ProductResource::collection($this->whenLoaded('products')) : null,
         ];
     }
 }

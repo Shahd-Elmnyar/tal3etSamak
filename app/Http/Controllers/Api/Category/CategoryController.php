@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers\Api\Category;
 
-use App\Http\Controllers\Api\AppController;
+use Exception;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Resources\MenuResource;
+
+
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Controllers\Api\AppController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Exception;
 
 class CategoryController extends AppController
 {
+
 
     public function index(Request $request)
     {
         try {
             $mainCategories = $this->getMainCategories();
             $subCategories = $this->getSubCategories();
+            // dd($subCategories);
             $products = $this->getProducts();
 
             return $this->successResponse(
@@ -38,30 +42,17 @@ class CategoryController extends AppController
         }
     }
 
-
-    private function getMainCategories()
-    {
-        return Category::with(['children'])
-            ->whereDoesntHave('parent')
-            ->all();
-    }
-
-    private function getSubCategories()
-    {
-        return Category::with(['parent'])
-            ->whereHas('parent')
-            ->all();
-    }
-    public function show(Request $request, $id, $subCategoryId = null)
+    public function show($id, $subCategoryId = null)
     {
         try {
             $category = $this->getCategoryWithRelations($id);
 
             if ($subCategoryId) {
                 $subCategory = $this->getSubCategoryWithRelations($category, $subCategoryId);
+
                 return $this->successResponse(
                     __('home.home_success'),
-                    ['category' => new MenuResource($subCategory)]
+                    ['category' => new CategoryResource($subCategory)]
                 );
             }
 
@@ -69,20 +60,34 @@ class CategoryController extends AppController
 
             return $this->successResponse(
                 __('home.home_success'),
-                ['category' => new MenuResource($category->setRelation('products', $products))]
+                ['category' => new CategoryResource($category->setRelation('products', $products))]
             );
         } catch (ModelNotFoundException $e) {
-            return $this->notFoundResponse(__('errors.category_not_found'));
+            return $this->notFoundResponse(__('home.category_not_found'));
         } catch (Exception $e) {
+            Log::error('HomeController error: ' . $e->getMessage());
             return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
         }
+    }
+
+    private function getMainCategories()
+    {
+        return Category::with(['children'])
+            ->whereDoesntHave('parent')
+            ->get();
+    }
+
+    private function getSubCategories()
+    {
+        return Category::with(['parent'])
+            ->whereHas('parent')
+            ->get();
     }
 
     private function getCategoryWithRelations($id)
     {
         return Category::with(['parent', 'children', 'products'])->findOrFail($id);
     }
-
 
     private function getSubCategoryWithRelations($category, $subCategoryId)
     {

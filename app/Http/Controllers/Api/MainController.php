@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Product;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -79,6 +80,9 @@ class MainController extends BaseController
         }
         return [];
     }
-
+    public function getProductById($productId)
+    {
+        return Product::findOrFail($productId);
+    }
 
 }

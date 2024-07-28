@@ -14,7 +14,7 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'description',
+        'content',
         'img',
         'price',
         'offer_price',
@@ -26,7 +26,7 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'description' => 'array',
+        'content' => 'array',
         'name' => 'array',
     ];
 
@@ -87,10 +87,18 @@ class Product extends Model
     public function userAdditions()
     {
         return $this->belongsToMany(Addition::class, 'user_product_addition')
-        ->withPivot('quantity')
-        ->withTimestamps();
+            ->withPivot('quantity')
+            ->withTimestamps();
     }
-
+  public static function getTotalQuantities(){
+        return self::select('products.*', DB::raw('SUM(order_items.quantity) as total_quantity'))
+            ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+            ->groupBy('products.id', 'products.name', 'products.content', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.is_offer', 'products.is_sale', 'products.active', 'products.start', 'products.skip', 'products.created_at', 'products.updated_at')
+            ->orderByDesc('total_quantity')
+            ->limit(2)
+            ->with(['additions', 'images', 'sizes', 'categories'])
+            ->get();
+  }
 
 
     public function getTotalAdditionPrice()
@@ -111,11 +119,11 @@ class Product extends Model
 
         $query->when($filters['search'] ?? false, function ($query, $search) {
 
-            $query->where(fn($query)=>$query
-                ->where('name','like','%'.$search.'%')
-                ->orWhere('description','like','%'.$search.'%')
+            $query->where(
+                fn ($query) => $query
+                    ->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%')
             );
-
         });
 
         $query->when($filters['price_min'] ?? false, function ($query, $price_min) {
@@ -128,5 +136,4 @@ class Product extends Model
             $query->where('price', '<=', $price_max);
         });
     }
-
 }

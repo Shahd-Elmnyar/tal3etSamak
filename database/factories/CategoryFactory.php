@@ -28,7 +28,7 @@ class CategoryFactory extends Factory
                 'ar' => $this->faker->word,
             ]),
             'slug' => $this->faker->unique()->slug,
-            'content' => json_encode([
+            'content' => ([
                 'en' => $this->faker->paragraph,
                 'ar' => $this->faker->paragraph,
             ]),
