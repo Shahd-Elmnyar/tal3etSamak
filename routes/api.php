@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Addition\AdditionController;
 use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::middleware('lang')->group(function () {
     Route::apiResource('update-password', UpdatePasswordController::class);
     Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/home', HomeController::class)->only(['index']);
         Route::apiResource('/products', ProductController::class)->only(['index', 'show']);
@@ -43,5 +44,8 @@ Route::middleware('lang')->group(function () {
         Route::apiResource('/address', AddressController::class)->only(['store']);
         Route::apiResource('additions/{product_id}', AdditionController::class)->only(['index']);
         Route::post('totalAdditions/{product_id}', [AdditionController::class, 'addAdditionToCart']);
+        Route::post('addProduct/{product_id}', [ProductController::class, 'addProductToCart']);
+        Route::post('/add-multiple-to-cart', [ProductController::class, 'addMultipleProductsToCart']);
+        Route::get('/cart', [CartController::class, 'showCart']);
     });
 });

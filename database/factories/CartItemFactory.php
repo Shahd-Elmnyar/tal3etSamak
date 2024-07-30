@@ -16,6 +16,7 @@ class CartItemFactory extends Factory
     {
         return [
             'quantity' => $this->faker->numberBetween(1, 10),
+            'addition_quantity' => $this->faker->numberBetween(1, 10),
             'price' => $this->faker->randomFloat(2, 1, 100),
             'total' => function (array $attributes) {
                 return $attributes['quantity'] * $attributes['price'] + $attributes['total_addition_price'];

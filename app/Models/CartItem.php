@@ -15,6 +15,7 @@ class CartItem extends Model
         'state',
         'cart_id',
         'product_id',
+        'addition_quantity',
         'size_id',
         'total_addition_price',
     ];

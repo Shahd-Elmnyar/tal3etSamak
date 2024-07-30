@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity');
+            $table->integer('quantity')->default(1);
+            $table->integer('addition_quantity')->nullable();
             $table->double('price');
             $table->double('total');
             $table->double('total_addition_price')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->foreignId('cart_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('size_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('size_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->default(1);
             $table->timestamps();
         });
     }
