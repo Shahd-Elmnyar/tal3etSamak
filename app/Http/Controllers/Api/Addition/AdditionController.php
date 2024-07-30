@@ -44,42 +44,18 @@ class AdditionController extends AppController
                 'additions.*.quantity' => 'required|integer|min:1',
             ]);
 
+
             // Find the product
             $product = $this->getProductById($productId);
 
             // Check if the size exists for the product
-            $sizeExists = $product->sizes()->where('sizes.id', $data['size_id'])->exists();
-            if (!$sizeExists) {
-                return response()->json([
-                    'message' => "Size with ID {$data['size_id']} does not exist for this product.",
-                ], 400);
-            }
+            $this->productSizeCheck($product, $data);
 
-            // Initialize total addition price
-            $totalAdditionPrice = 0;
+            // Calculate the total addition price
+            $totalAdditionPrice = $this->totalAddition($product, $data);
 
-            // Loop through each addition in the request data
-            foreach ($data['additions'] as $addition) {
-                // Check if the addition exists for the product
-                $additionExists = $product->additions()->where('additions.id', $addition['addition_id'])->exists();
-                if (!$additionExists) {
-                    return response()->json([
-                        'message' => "Addition with ID {$addition['addition_id']} does not exist for this product.",
-                    ], 400);
-                }
+            $cart = Cart::firstOrCreate();
 
-                // Calculate the total addition price
-                $totalAdditionPrice += $product->additions()
-                    ->where('additions.id', $addition['addition_id'])
-                    ->first()
-                    ->price * $addition['quantity'];
-            }
-
-            // Find or create the cart
-            $cart = Cart::firstOrCreate(
-                ['user_id' => $this->user->id],
-                ['total_price' => 0]
-            );
 
             // Create and save CartItem
             $cartItem = CartItem::create([
@@ -87,22 +63,16 @@ class AdditionController extends AppController
                 'product_id' => $productId,
                 'price' => $product->price,
                 'size_id' => $data['size_id'],
-                'quantity' => array_sum(array_column($data['additions'], 'quantity')),
-                'total' => array_sum(array_column($data['additions'], 'quantity')) * $product->price + $totalAdditionPrice,
+                'addition_quantity' => array_sum(array_column($data['additions'], 'quantity')),
+                'total' => $product->price + $totalAdditionPrice,
                 'total_addition_price' => $totalAdditionPrice
             ]);
 
             // Attach additions to the product
-            foreach ($data['additions'] as $addition) {
-                $this->user->productAdditions()->attach($productId, [
-                    'addition_id' => $addition['addition_id'],
-                    'quantity' => $addition['quantity'],
-                ]);
-            }
+            $this->attachProductAdditions($productId, $data);
 
             // Update the cart's total price
-            $cart->total_price += $cartItem->total;
-            $cart->save();
+            $this->updateTotalCartPrice($cart ,$cartItem);
 
             return $this->successResponse(
                 'home.add_product_to_cart_success',
