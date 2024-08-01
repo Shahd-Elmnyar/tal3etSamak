@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Addition\AdditionController;
 use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
+use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\CartController;
 
 /*
@@ -47,5 +48,7 @@ Route::middleware('lang')->group(function () {
         Route::post('addProduct/{product_id}', [ProductController::class, 'addProductToCart']);
         Route::post('/add-multiple-to-cart', [ProductController::class, 'addMultipleProductsToCart']);
         Route::get('/cart', [CartController::class, 'showCart']);
+        Route::post('/checkout', [CheckoutController::class, 'checkout']);
+        Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
     });
 });

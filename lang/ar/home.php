@@ -10,5 +10,6 @@ return [
     'address_created' => 'تمت اضافة العنوان بنجاح',
     'product_not_found' => 'المنتج غير موجود',
     'add_product_to_cart_success' => 'تمت اضافة المنتج الى السلة بنجاح',
-
+    'order_success' => 'تمت العملية بنجاح',
+    'payment_success' => 'تم تحديث طريقة الدفع بنجاح',
 ];

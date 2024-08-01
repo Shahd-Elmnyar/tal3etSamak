@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('type');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('payment_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('payment_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->timestamps();
         });
     }

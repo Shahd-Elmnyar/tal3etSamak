@@ -9,7 +9,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "ichtrojan/laravel-otp": "^2.0",
         "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.2",
+        "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "santigarcor/laratrust": "^8.3"
     },
