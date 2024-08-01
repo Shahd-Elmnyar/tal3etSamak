@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Checkout\CheckoutController;
+use App\Http\Controllers\Api\Payment\StripePaymentController;
 use App\Http\Controllers\CartController;
 
 /*
@@ -50,5 +51,6 @@ Route::middleware('lang')->group(function () {
         Route::get('/cart', [CartController::class, 'showCart']);
         Route::post('/checkout', [CheckoutController::class, 'checkout']);
         Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
+        Route::post('stripe',[StripePaymentController::class,'stripePost']);
     });
 });

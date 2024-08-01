@@ -96,7 +96,7 @@ class CheckoutController extends AppController
 
 
         return $this->successResponse(
-            'home.payment_success',[
+            'home.payment_updated',[
             'order' => new CartResource($order),]
         );
     }

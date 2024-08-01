@@ -11,5 +11,6 @@ return [
     'product_not_found' => 'Product not found',
     'add_product_to_cart_success' => 'Product added to cart successfully',
     'order_success' => 'Order placed successfully',
-    'payment_success' => 'Payment method updated successfully',
+    'payment_success' => 'Payment successful',
+    'payment_updated' => 'Payment method updated successfully',
 ];
