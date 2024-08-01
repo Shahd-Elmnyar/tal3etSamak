@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Address;
+namespace App\Http\Resources;
 
 use App\Models\City;
 use Illuminate\Http\Request;

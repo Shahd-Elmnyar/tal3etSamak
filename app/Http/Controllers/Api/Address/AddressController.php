@@ -6,7 +6,7 @@ use App\Models\Address;
 use Illuminate\Database\QueryException;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Requests\Address\AddressRequest;
-use App\Http\Resources\Address\AddressResource;
+use App\Http\Resources\AddressResource;
 
 class AddressController extends AppController
 {

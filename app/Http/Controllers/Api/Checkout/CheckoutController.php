@@ -49,6 +49,7 @@ class CheckoutController extends AppController
                 'order_type' => $request->order_type,
                 'user_id' => $this->user->id,
                 'order_id' => $order->id,
+                'payment_id' => $request->payment_id,
             ]);
 
             foreach ($cart->cartItems as $item) {

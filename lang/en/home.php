@@ -13,4 +13,5 @@ return [
     'order_success' => 'Order placed successfully',
     'payment_success' => 'Payment successful',
     'payment_updated' => 'Payment method updated successfully',
+    'order_not_found' => 'Order not found',
 ];

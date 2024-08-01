@@ -13,4 +13,5 @@ return [
     'order_success' => 'تمت العملية بنجاح',
     'payment_success' => 'تم الدفع بنجاح',
     'payment_updated' => 'تم تحديث طريقة الدفع بنجاح',
+    'order_not_found' => 'الطلب غير موجود',
 ];
