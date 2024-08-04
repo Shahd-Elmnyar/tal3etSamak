@@ -14,4 +14,13 @@ return [
     'payment_success' => 'تم الدفع بنجاح',
     'payment_updated' => 'تم تحديث طريقة الدفع بنجاح',
     'order_not_found' => 'الطلب غير موجود',
+    'favorite_success' => 'تمت اضافة المنتج الى المفضلة بنجاح',
+    'PRODUCT_ALREADY_FAVORITED' => 'المنتج مضاف مسبقا',
+    'PRODUCT_REMOVED' => 'تمت ازالة المنتج من المفضلة بنجاح',
+    'PRODUCT_NOT_FAVORITED' => 'المنتج غير مضاف مسبقا',
+    'ALL_FAVORITES_REMOVED' => 'تمت ازالة جميع المفضلات بنجاح',
+    'NO_FAVORITES_TO_REMOVE' => 'لا توجد منتجات مضافة مسبقا',
+
+    'not_addition_for_this_product' => 'ليست اضافة لهذا المنتج',
+
 ];

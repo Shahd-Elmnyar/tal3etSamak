@@ -28,7 +28,6 @@ class ProductController extends AppController
             ]
         );
     }
-
     public function show($id)
     {
         try {
@@ -127,10 +126,20 @@ class ProductController extends AppController
             // Check if the size exists for the product
             $this->productSizeCheck($product, $data);
 
+            foreach ($data['additions'] as $addition) {
+                if (!$this->productHasAddition($product, $addition['addition_id'])) {
+                    return $this->validationErrorResponse('home.not_addition_for_this_product');
+                }
+            }
+
             // Calculate the total addition price
             $totalAdditionPrice = $this->totalAddition($product, $data);
 
-            $cart = Cart::firstOrCreate(['user_id' => $request->user()->id]);
+            // Create or find the cart and set the total_price
+            $cart = Cart::firstOrCreate(
+                ['user_id' => $request->user()->id],
+                ['total_price' => 0] // Set default total_price
+            );
 
             // Create and save CartItem
             $cartItem = CartItem::create([
@@ -156,7 +165,9 @@ class ProductController extends AppController
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('home.product_not_found');
         } catch (ValidationException $e) {
-            return $this->validationErrorResponse((object)['errors' => $e->errors()]);
+            // Debugging: Log the validation errors
+            Log::error('Validation errors: ', ['errors' => $e->errors()]);
+            return $this->validationErrorResponse('validation_error');
         } catch (\Exception $e) {
             Log::error('General error: ', ['error' => $e->getMessage()]);
             return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);

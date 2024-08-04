@@ -3,19 +3,20 @@
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Home\HomeController;
+use App\Http\Controllers\Api\Order\OrderController;
+use App\Http\Controllers\Api\Favorite\FavoriteController;
 use App\Http\Controllers\Api\Address\AddressController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Products\ProductController;
 use App\Http\Controllers\Api\Addition\AdditionController;
 use App\Http\Controllers\Api\Category\CategoryController;
+use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
-use App\Http\Controllers\Api\Checkout\CheckoutController;
-use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Payment\StripePaymentController;
-use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +55,7 @@ Route::middleware('lang')->group(function () {
         Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
         Route::post('stripe',[StripePaymentController::class,'stripePost']);
         Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
+        Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
+        Route::delete('favorites', [FavoriteController::class, 'destroyAll']);
     });
 });

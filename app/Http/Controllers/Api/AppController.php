@@ -96,4 +96,8 @@ class AppController extends MainController
         $cart->total_price += $cartItem->total;
         $cart->save();
     }
+    public function productHasAddition($product, $additionId)
+    {
+        return $product->additions()->where('additions.id', $additionId)->exists();
+    }
 }
