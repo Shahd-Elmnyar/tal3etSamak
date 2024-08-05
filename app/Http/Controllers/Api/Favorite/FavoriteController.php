@@ -23,14 +23,15 @@ class FavoriteController extends AppController
             }
 
             return $this->successResponse(
-                'home.home_success',[
-                ProductResource::collection($favoriteProducts)
-            ]);
+                'home.home_success',
+                [
+                    ProductResource::collection($favoriteProducts)
+                ]
+            );
         } catch (Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
 
-            return $this->genericErrorResponse(__('errors.server_error'), ['error' => $e->getMessage()]);
-
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
 
@@ -68,14 +69,14 @@ class FavoriteController extends AppController
 
             return $this->successResponse(
                 'home.favorite_success',
-                [new ProductResource($favorite->product)]);
+                [new ProductResource($favorite->product)]
+            );
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('errors.server_error'), ['error' => $e->getMessage()]);
-
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
 
-    public function destroy( $id)
+    public function destroy($id)
     {
         try {
 
@@ -90,8 +91,7 @@ class FavoriteController extends AppController
                 return $this->notFoundResponse('home.PRODUCT_NOT_FAVORITED');
             }
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('errors.server_error'), ['error' => $e->getMessage()]);
-
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
     public function destroyAll()
@@ -105,7 +105,7 @@ class FavoriteController extends AppController
                 return $this->notFoundResponse('home.NO_FAVORITES_TO_REMOVE');
             }
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('errors.server_error'), ['error' => $e->getMessage()]);
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
 }

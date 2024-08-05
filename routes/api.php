@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Payment\StripePaymentController;
+use App\Http\Controllers\Api\Settings\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +37,9 @@ Route::middleware('lang')->group(function () {
     Route::apiResource('forget-password', ForgetPasswordController::class);
     Route::apiResource('update-password', UpdatePasswordController::class);
     Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
         Route::apiResource('/home', HomeController::class)->only(['index']);
         Route::apiResource('/products', ProductController::class)->only(['index', 'show']);
         Route::post('search', [ProductController::class, 'search']);
@@ -57,5 +58,8 @@ Route::middleware('lang')->group(function () {
         Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
         Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
         Route::delete('favorites', [FavoriteController::class, 'destroyAll']);
+        Route::apiResource('profile',ProfileController::class)->only('index' );
+        Route::delete('/profile', [ProfileController::class, 'deleteAccount']);
+        Route::post('/profile', [ProfileController::class, 'update']);
     });
 });

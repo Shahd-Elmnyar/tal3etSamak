@@ -18,10 +18,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => json_encode([
-                'en' => $this->faker->name,
-                'ar' =>  $this->faker->name,
-            ]),
+            'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->unique()->phoneNumber,
             'password' => bcrypt('password'), // default password

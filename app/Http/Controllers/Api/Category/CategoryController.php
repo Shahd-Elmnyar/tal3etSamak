@@ -38,7 +38,7 @@ class CategoryController extends AppController
                 ]
             );
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('errors.server_error'), ['error' => $e->getMessage()]);
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
 

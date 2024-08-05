@@ -35,7 +35,7 @@ class HomeController extends AppController
             );
         } catch (Exception $e) {
             Log::error('HomeController error: ' . $e->getMessage());
-            return $this->genericErrorResponse(__('errors.server_error'), ['error' => $e->getMessage()]);
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
 

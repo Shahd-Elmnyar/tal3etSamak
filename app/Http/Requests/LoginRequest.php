@@ -36,12 +36,6 @@ class LoginRequest extends FormRequest
             ]
         ];
     }
-    public function messages()
-    {
-        return [
-            'email.exists' => 'The provided credentials are incorrect. Please try again.',
-        ];
-    }
     /**
      * Get the custom messages for validator errors.
      *

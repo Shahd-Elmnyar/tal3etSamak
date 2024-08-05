@@ -25,10 +25,9 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name_ar' => ['required', 'string', 'max:255'],
-            'name_en' => ['required', 'string', 'max:255'],
-            'email' => 'required|email|unique:users',
-            'phone' => ['required', 'string', 'min:10', 'max:15', 'unique:users'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
+            'phone' => ['required', 'string', 'min:10', 'max:15', 'unique:users,phone,NULL,id,deleted_at,NULL'],
             'password' => [
                 'required',
                 'string',
@@ -71,11 +70,6 @@ class RegisterRequest extends FormRequest
     public function validatedData()
     {
         $validated = $this->validated();
-        $validated['name'] = [
-            'ar' => $validated['name_ar'],
-            'en' => $validated['name_en']
-        ];
-        unset($validated['name_ar'], $validated['name_en']);
 
         return $validated;
     }

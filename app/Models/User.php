@@ -9,11 +9,12 @@ use Laratrust\Contracts\LaratrustUser;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements LaratrustUser
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -24,9 +25,13 @@ class User extends Authenticatable implements LaratrustUser
         'name',
         'email',
         'phone',
+        'date_of_birth',
+        'gender',
         'otp_validated',
         'password',
         'lang',
+        'img',
+
     ];
 
     /**
@@ -47,7 +52,16 @@ class User extends Authenticatable implements LaratrustUser
     protected $casts = [
         'email_verified_at' => 'datetime',
         'name' => 'array',
+        'date_of_birth' => 'datetime:Y-m-d',
     ];
+    protected $dates = ['deleted_at' , 'date_of_birth'];
+
+
+    // Optionally, you can customize the format when serializing to JSON
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 
     public function addresses()
     {

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\MainController;
 use Illuminate\Support\Facades\App; // Add this line
 
-class AuthController  extends MainController
+class AuthController extends MainController
 {
     public function store(RegisterRequest $request): JsonResponse
     {
@@ -28,24 +28,32 @@ class AuthController  extends MainController
         }
 
         try {
-            $user = User::create($request->validatedData());
+            $user = User::create($request->validated());
+            $user->load('addresses'); // Load the addresses relationship
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
             return $this->successResponse('auth.user_created', (object)['token' => $token, 'user_data' => $userData]);
         } catch (QueryException $e) {
+            Log::error('Database error during register process: ' . $e->getMessage(), [
+                'sql' => $e->getSql(),
+                'bindings' => $e->getBindings()
+            ]);
             return $this->genericErrorResponse('auth.database_error', ['error' => $e->getMessage()]);
         } catch (\Exception $e) {
+            Log::error('General error during register process: ' . $e->getMessage());
             return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
         }
     }
 
+
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->with('addresses')->first();
 
         // Check if user exists and password matches
+        // dd(Hash::check($request->password, $user->password));
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->validationErrorResponse((object)['credential' => 'auth.invalid_credentials']);
+            return $this->validationErrorResponse( 'auth.invalid_credentials');
         }
 
         try {
@@ -76,3 +84,4 @@ class AuthController  extends MainController
         }
     }
 }
+

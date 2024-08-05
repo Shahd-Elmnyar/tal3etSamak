@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api\Addition;
 
 use App\Models\Cart;
-use App\Models\Product;
-use App\Models\Addition;
 use App\Models\CartItem;
 
 use Illuminate\Http\Request;

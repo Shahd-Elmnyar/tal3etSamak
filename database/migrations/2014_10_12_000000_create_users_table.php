@@ -17,13 +17,16 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('password');
+            $table->string('img')->nullable();
             $table->string('gender')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->boolean('otp_validated')->default(false);
             $table->string('lang')->default('en');
-            // $table->foreignId('address_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+            $table->unique(['email', 'deleted_at']);
+            $table->unique(['phone', 'deleted_at']);
         });
     }
 

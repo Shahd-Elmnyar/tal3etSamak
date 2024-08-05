@@ -6,7 +6,7 @@ return [
     'no_discounted_products_found' => 'No discounted products found.',
     'notification_failed'=> 'Failed to send notification',
     'address_created' => 'Address created successfully',
-    'home_success' =>'home data returned successfully',
+    'home_success' =>'data returned successfully',
     'address_created' => 'Address created successfully',
     'product_not_found' => 'Product not found',
     'add_product_to_cart_success' => 'Product added to cart successfully',
@@ -21,4 +21,5 @@ return [
     'ALL_FAVORITES_REMOVED' => 'All favorites removed successfully',
     'NO_FAVORITES_TO_REMOVE' => 'No favorites to remove',
     'not_addition_for_this_product' => 'Not addition for this product',
+    'delete_success' => 'Deleted successfully',
 ];

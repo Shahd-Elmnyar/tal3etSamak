@@ -20,7 +20,7 @@ return [
     'PRODUCT_NOT_FAVORITED' => 'المنتج غير مضاف مسبقا',
     'ALL_FAVORITES_REMOVED' => 'تمت ازالة جميع المفضلات بنجاح',
     'NO_FAVORITES_TO_REMOVE' => 'لا توجد منتجات مضافة مسبقا',
-
+    'delete_success' => 'تمت عملية الحذف بنجاح',
     'not_addition_for_this_product' => 'ليست اضافة لهذا المنتج',
 
 ];
