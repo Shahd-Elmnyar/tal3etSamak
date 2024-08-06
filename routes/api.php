@@ -1,23 +1,21 @@
 <?php
 
-use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Cart\CartController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Order\OrderController;
-use App\Http\Controllers\Api\Favorite\FavoriteController;
 use App\Http\Controllers\Api\Address\AddressController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Products\ProductController;
+use App\Http\Controllers\Api\Settings\ProfileController;
 use App\Http\Controllers\Api\Addition\AdditionController;
 use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Checkout\CheckoutController;
+use App\Http\Controllers\Api\Favorite\FavoriteController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Payment\StripePaymentController;
-use App\Http\Controllers\Api\Settings\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
