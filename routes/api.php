@@ -46,7 +46,10 @@ Route::middleware('lang')->group(function () {
         Route::post('filter', [ProductController::class, 'filter']);
         Route::apiResource('/menu', CategoryController::class)->only(['index']);
         Route::get('/menu/{main_category_id}/{sub_category_id?}', [CategoryController::class, 'show']);
-        Route::apiResource('/address', AddressController::class)->only(['store']);
+        Route::apiResource('/address', AddressController::class)->only(['index','store']);
+        Route::post('/address/{address_id}', [AddressController::class, 'update']);
+        Route::delete('/address/{address_id}', [AddressController::class, 'destroy']);
+
         Route::apiResource('additions/{product_id}', AdditionController::class)->only(['index']);
         Route::post('totalAdditions/{product_id}', [AdditionController::class, 'addAdditionToCart']);
         Route::post('addProduct/{product_id}', [ProductController::class, 'addProductToCart']);

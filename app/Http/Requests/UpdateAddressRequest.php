@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Address;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddressRequest extends FormRequest
+class UpdateAddressRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class AddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'content' => 'required|string|max:255',
-            'type' => 'required|string|max:255|in:home,work,other',
+            'name' => 'string|max:255',
+            'content' => 'string|max:255',
+            'type' => 'string|max:255|in:home,work,other',
             'building' => 'string|max:255',
             'floor' => 'string|max:255',
             'apartment' => 'string|max:255',

@@ -22,5 +22,7 @@ return [
     'NO_FAVORITES_TO_REMOVE' => 'لا توجد منتجات مضافة مسبقا',
     'delete_success' => 'تمت عملية الحذف بنجاح',
     'not_addition_for_this_product' => 'ليست اضافة لهذا المنتج',
+    'address_deleted'=> 'تم حذف العنوان بنجاح',
+    'address_not_found'=> 'العنوان غير موجود',
 
 ];

@@ -22,4 +22,6 @@ return [
     'NO_FAVORITES_TO_REMOVE' => 'No favorites to remove',
     'not_addition_for_this_product' => 'Not addition for this product',
     'delete_success' => 'Deleted successfully',
+    'address_deleted'=> 'Address deleted successfully',
+    'address_not_found'=> 'Address not found',
 ];
