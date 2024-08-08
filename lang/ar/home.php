@@ -10,6 +10,7 @@ return [
     'address_created' => 'تمت اضافة العنوان بنجاح',
     'product_not_found' => 'المنتج غير موجود',
     'add_product_to_cart_success' => 'تمت اضافة المنتج الى السلة بنجاح',
+    'cart_empty' => 'السلة فارغة',
     'order_success' => 'تمت العملية بنجاح',
     'payment_success' => 'تم الدفع بنجاح',
     'payment_updated' => 'تم تحديث طريقة الدفع بنجاح',
@@ -26,5 +27,12 @@ return [
     'address_not_found'=> 'العنوان غير موجود',
     'password_change_success'=> 'تم تغيير كلمة المرور بنجاح',
     'language_change_success'=> 'تم تغيير اللغة بنجاح',
+    'shipping_not_found'=> 'الشحن لهذا العنوان غير موجود',
+    'voucher_not_found'=> 'القسيمة غير موجودة',
+    'voucher_used_up'=> 'تم استخدام القسيمة',
+    'voucher_not_valid'=> 'القسيمة غير صالحة',
+    'voucher_expired'=> 'القسيمة منتهية',
+    'voucher_limit_reached'=> 'تم الوصول إلى حد استخدام القسيمة',
+
 
 ];

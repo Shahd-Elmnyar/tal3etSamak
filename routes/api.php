@@ -61,6 +61,8 @@ Route::middleware('lang')->group(function () {
         Route::get('/cart', [CartController::class, 'showCart']);
 
         Route::post('/checkout', [CheckoutController::class, 'checkout']);
+        Route::post('/final_checkout/{orderId}', [CheckoutController::class, 'applyVoucher']);
+
 
         Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
         Route::post('stripe',[StripePaymentController::class,'stripePost']);

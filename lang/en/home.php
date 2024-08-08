@@ -10,6 +10,7 @@ return [
     'address_created' => 'Address created successfully',
     'product_not_found' => 'Product not found',
     'add_product_to_cart_success' => 'Product added to cart successfully',
+    'cart_empty' => 'Cart is empty',
     'order_success' => 'Order placed successfully',
     'payment_success' => 'Payment successful',
     'payment_updated' => 'Payment method updated successfully',
@@ -26,4 +27,9 @@ return [
     'address_not_found'=> 'Address not found',
     'password_change_success'=> 'Password changed successfully',
     'language_change_success'=> 'Language changed successfully',
+    'shipping_not_found'=> 'Shipping for this address not found',
+    'voucher_not_found'=> 'Voucher not found',
+    'voucher_limit_reached'=> 'Voucher usage limit reached',
+    'voucher_not_valid'=> 'Voucher not valid',
+    'voucher_expired'=> 'Voucher expired',
 ];

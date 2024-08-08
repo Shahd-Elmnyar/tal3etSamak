@@ -14,7 +14,7 @@ class CartController extends AppController
         $cart = Cart::where('user_id', $this->user->id)->with('cartItems.product')->first();
 
         if (!$cart) {
-            return response()->json([
+            return $this->successResponse([
                 'cart' => [],
                 'totalItems' => 0,
                 'totalPrice' => 0.00
@@ -25,7 +25,7 @@ class CartController extends AppController
         $totalPrice = $cart->total_price;
 
 
-        return response()->json([
+        return $this->successResponse([
             'cart' => $cart->cartItems,
             'totalItems' => $totalItems,
             'totalPrice' => $totalPrice

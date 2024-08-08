@@ -26,27 +26,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Disable foreign key checks
-        // Schema::disableForeignKeyConstraints();
-
-        // Truncate tables
-        // DB::table('users')->truncate();
-        // DB::table('categories')->truncate();
-        // DB::table('products')->truncate();
-        // DB::table('addresses')->truncate();
-        // DB::table('payments')->truncate();
-        // DB::table('favorites')->truncate();
-        // DB::table('orders')->truncate();
-        // DB::table('order_items')->truncate();
-        // DB::table('carts')->truncate();
-        // DB::table('cart_items')->truncate();
-        // DB::table('order_details')->truncate();
-        // DB::table('roles')->truncate();
-
-        // Re-enable foreign key checks
-        // Schema::enableForeignKeyConstraints();
-
-        // Call individual seeders
         $this->call([
             UserSeeder::class,
             RoleSeeder::class,
@@ -65,7 +44,9 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             ImageSeeder::class,
             RateSeeder::class,
-            ReviewSeeder::class
+            ReviewSeeder::class,
+            ShippingSeeder::class,
+            VoucherSeeder::class,
         ]);
     }
 }
