@@ -46,7 +46,7 @@ class MainController extends BaseController
             'code' => 'error',
             'message' => 'validation_error',
             'errors' => __($message),
-        ], 403);
+        ], 422);
     }
     public function successResponse($message, $data = null)
     {

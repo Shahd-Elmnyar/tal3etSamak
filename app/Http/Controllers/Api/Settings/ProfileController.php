@@ -79,7 +79,7 @@ class ProfileController extends AppController
             if (isset($userData['date_of_birth'])) {
                 $userData['date_of_birth'] = Carbon::createFromFormat('Y-m-d', $userData['date_of_birth']);
             }
-            
+
             // Update the user
             $this->user->update($userData);
 
@@ -109,10 +109,18 @@ class ProfileController extends AppController
             // Validate input
             $request->validate([
                 'current_password' => 'required',
-                'password' => 'required|min:8|confirmed',
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/[a-z]/',
+                    'regex:/[A-Z]/',
+                    'regex:/\d/',
+                    'regex:/[@$!%*#?&]/',
+                ]
             ]);
 
-            $currentPassword = $request->input('current_password');
+            $currentPassword = $request->current_password;
             $newPassword = $request->password;
 
 
