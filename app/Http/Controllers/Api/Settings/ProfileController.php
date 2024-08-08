@@ -119,32 +119,20 @@ class ProfileController extends AppController
                     'regex:/[@$!%*#?&]/',
                 ]
             ]);
-
             $currentPassword = $request->current_password;
             $newPassword = $request->password;
-
-
-            // Debug: Log current password hash
             Log::info('Current password hash: ' . $this->user->password);
-
             // Check if the current password matches
             if (!Hash::check($currentPassword, $this->user->password)) {
                 return $this->validationErrorResponse(__('auth.password_incorrect'));
             }
-
             // Hash the new password
             $hashedNewPassword = Hash::make($newPassword);
-
-            // Debug: Log the new hashed password
             Log::info('New hashed password: ' . $hashedNewPassword);
-
             // Update the password
             $this->user->password = $hashedNewPassword;
             $this->user->save();
-
-            // Debug: Log successful password change
             Log::info('Password changed successfully for user ID: ' . $this->user->id);
-
             return $this->successResponse('home.password_change_success');
         } catch (ValidationException $e) {
             Log::error('Validation error: ', ['errors' => $e->errors()]);

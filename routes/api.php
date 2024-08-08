@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Payment\StripePaymentController;
+use App\Http\Controllers\Api\Settings\HelpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,5 +80,7 @@ Route::middleware('lang')->group(function () {
         Route::post('/profile/change-lang', [ProfileController::class, 'changeLang']);
 
         Route::apiResource('contact',ContactController::class)->only('store');
+        Route::apiResource('help',HelpController::class)->only('index');
+        Route::post('help/search', [HelpController::class, 'search']);
     });
 });
