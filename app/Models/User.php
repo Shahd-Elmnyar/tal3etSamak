@@ -95,4 +95,7 @@ class User extends Authenticatable implements LaratrustUser
         ->withPivot('addition_id', 'quantity')
         ->withTimestamps();
     }
+    public function messages(){
+        return $this->hasMany(Message::class);
+    }
 }

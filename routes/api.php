@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Favorite\FavoriteController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
+use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Payment\StripePaymentController;
 
 /*
@@ -74,5 +75,7 @@ Route::middleware('lang')->group(function () {
         Route::post('/profile', [ProfileController::class, 'update']);
         Route::post('/profile/change-password', [ProfileController::class, 'changePassword']);
         Route::post('/profile/change-lang', [ProfileController::class, 'changeLang']);
+
+        Route::apiResource('contact',ContactController::class)->only('store');
     });
 });
