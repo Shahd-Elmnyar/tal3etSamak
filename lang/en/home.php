@@ -24,4 +24,6 @@ return [
     'delete_success' => 'Deleted successfully',
     'address_deleted'=> 'Address deleted successfully',
     'address_not_found'=> 'Address not found',
+    'password_change_success'=> 'Password changed successfully',
+    'language_change_success'=> 'Language changed successfully',
 ];

@@ -35,4 +35,6 @@ return [
     'logged_out'=>'You have successfully logged out.',
     'user_created' => 'User created successfully.',
     'user_login' => 'User logged in successfully.',
+    'password_incorrect' => 'The provided password is incorrect.',
+
 ];

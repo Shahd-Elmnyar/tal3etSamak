@@ -45,15 +45,13 @@ class AuthController extends MainController
         }
     }
 
-
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->with('addresses')->first();
 
         // Check if user exists and password matches
-        // dd(Hash::check($request->password, $user->password));
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->validationErrorResponse( 'auth.invalid_credentials');
+            return $this->validationErrorResponse('auth.invalid_credentials');
         }
 
         try {

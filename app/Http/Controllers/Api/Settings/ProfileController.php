@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\Settings;
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Requests\UpdateProfileRequest;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 
 class ProfileController extends AppController
@@ -76,11 +79,8 @@ class ProfileController extends AppController
             if (isset($userData['date_of_birth'])) {
                 $userData['date_of_birth'] = Carbon::createFromFormat('Y-m-d', $userData['date_of_birth']);
             }
-
-            // Update the user profile
-            if (isset($userData['password'])) {
-                $userData['password'] = bcrypt($userData['password']);
-            }
+            
+            // Update the user
             $this->user->update($userData);
 
             // Update address if provided
@@ -103,5 +103,64 @@ class ProfileController extends AppController
             return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
         }
     }
+    public function changePassword(Request $request)
+    {
+        try {
+            // Validate input
+            $request->validate([
+                'current_password' => 'required',
+                'password' => 'required|min:8|confirmed',
+            ]);
 
+            $currentPassword = $request->input('current_password');
+            $newPassword = $request->password;
+
+
+            // Debug: Log current password hash
+            Log::info('Current password hash: ' . $this->user->password);
+
+            // Check if the current password matches
+            if (!Hash::check($currentPassword, $this->user->password)) {
+                return $this->validationErrorResponse(__('auth.password_incorrect'));
+            }
+
+            // Hash the new password
+            $hashedNewPassword = Hash::make($newPassword);
+
+            // Debug: Log the new hashed password
+            Log::info('New hashed password: ' . $hashedNewPassword);
+
+            // Update the password
+            $this->user->password = $hashedNewPassword;
+            $this->user->save();
+
+            // Debug: Log successful password change
+            Log::info('Password changed successfully for user ID: ' . $this->user->id);
+
+            return $this->successResponse('home.password_change_success');
+        } catch (ValidationException $e) {
+            Log::error('Validation error: ', ['errors' => $e->errors()]);
+            return $this->validationErrorResponse((object)['errors' => $e->errors()]);
+        } catch (\Exception $e) {
+            Log::error('change password error: ' . $e->getMessage());
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+        }
+    }
+    public function changeLang(Request $request){
+
+        try {
+            $request->validate([
+                'lang' => 'required|in:en,ar',
+            ]);
+            $this->user->lang = $request->lang;
+            $this->user->save();
+            return $this->successResponse('home.language_change_success');
+        } catch (ValidationException $e) {
+            Log::error('Validation error: ', ['errors' => $e->errors()]);
+            return $this->validationErrorResponse((object)['errors' => $e->errors()]);
+        } catch (\Exception $e) {
+            Log::error('change language error: ' . $e->getMessage());
+            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+        }
+    }
 }

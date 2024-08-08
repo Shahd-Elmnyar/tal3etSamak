@@ -25,16 +25,6 @@ class UpdateProfileRequest extends FormRequest
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|unique:users,email,' . $this->user()->id,
             'phone' => 'nullable|string|max:15|unique:users,phone,' . $this->user()->id,
-            'password' => [
-                'nullable',
-                'string',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/\d/',
-                'regex:/[@$!%*#?&]/',
-                'confirmed'
-            ],
             'img' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'date_of_birth' => 'nullable|date|before:today|date_format:Y-m-d',
             'gender' => 'nullable|string|in:male,female',

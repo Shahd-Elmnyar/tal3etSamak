@@ -38,29 +38,41 @@ Route::middleware('lang')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
+
         Route::apiResource('/home', HomeController::class)->only(['index']);
+
         Route::apiResource('/products', ProductController::class)->only(['index', 'show']);
         Route::post('search', [ProductController::class, 'search']);
         Route::post('filter', [ProductController::class, 'filter']);
+
         Route::apiResource('/menu', CategoryController::class)->only(['index']);
         Route::get('/menu/{main_category_id}/{sub_category_id?}', [CategoryController::class, 'show']);
+
         Route::apiResource('/address', AddressController::class)->only(['index','store']);
         Route::post('/address/{address_id}', [AddressController::class, 'update']);
         Route::delete('/address/{address_id}', [AddressController::class, 'destroy']);
 
         Route::apiResource('additions/{product_id}', AdditionController::class)->only(['index']);
         Route::post('totalAdditions/{product_id}', [AdditionController::class, 'addAdditionToCart']);
+
         Route::post('addProduct/{product_id}', [ProductController::class, 'addProductToCart']);
         Route::post('/add-multiple-to-cart', [ProductController::class, 'addMultipleProductsToCart']);
         Route::get('/cart', [CartController::class, 'showCart']);
+
         Route::post('/checkout', [CheckoutController::class, 'checkout']);
+
         Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
         Route::post('stripe',[StripePaymentController::class,'stripePost']);
+
         Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
+
         Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
         Route::delete('favorites', [FavoriteController::class, 'destroyAll']);
+
         Route::apiResource('profile',ProfileController::class)->only('index' );
         Route::delete('/profile', [ProfileController::class, 'deleteAccount']);
         Route::post('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/change-password', [ProfileController::class, 'changePassword']);
+        Route::post('/profile/change-lang', [ProfileController::class, 'changeLang']);
     });
 });

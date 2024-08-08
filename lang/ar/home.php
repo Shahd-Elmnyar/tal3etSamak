@@ -24,5 +24,7 @@ return [
     'not_addition_for_this_product' => 'ليست اضافة لهذا المنتج',
     'address_deleted'=> 'تم حذف العنوان بنجاح',
     'address_not_found'=> 'العنوان غير موجود',
+    'password_change_success'=> 'تم تغيير كلمة المرور بنجاح',
+    'language_change_success'=> 'تم تغيير اللغة بنجاح',
 
 ];
