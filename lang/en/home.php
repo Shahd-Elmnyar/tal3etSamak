@@ -32,4 +32,5 @@ return [
     'voucher_limit_reached'=> 'Voucher usage limit reached',
     'voucher_not_valid'=> 'Voucher not valid',
     'voucher_expired'=> 'Voucher expired',
+    'Notification_sent'=> 'Notification sent successfully',
 ];

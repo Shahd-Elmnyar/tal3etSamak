@@ -1,11 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Cart\CartController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Order\OrderController;
+use App\Http\Controllers\Api\Settings\HelpController;
 use App\Http\Controllers\Api\Address\AddressController;
+use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Products\ProductController;
 use App\Http\Controllers\Api\Settings\ProfileController;
@@ -15,9 +17,8 @@ use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Favorite\FavoriteController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
-use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\Payment\StripePaymentController;
-use App\Http\Controllers\Api\Settings\HelpController;
+use App\Http\Controllers\Api\Notification\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,7 +67,7 @@ Route::middleware('lang')->group(function () {
 
 
         Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
-        Route::post('stripe',[StripePaymentController::class,'stripePost']);
+        Route::post('pay/{orderId}',[StripePaymentController::class,'stripePost']);
 
         Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
 
@@ -82,5 +83,7 @@ Route::middleware('lang')->group(function () {
         Route::apiResource('contact',ContactController::class)->only('store');
         Route::apiResource('help',HelpController::class)->only('index');
         Route::post('help/search', [HelpController::class, 'search']);
+        Route::post('/notify-offer', [NotificationController::class, 'notifyOffer']);
+        Route::get('/notifications', [NotificationController::class, 'getNotifications']);
     });
 });

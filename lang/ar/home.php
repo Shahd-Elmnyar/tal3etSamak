@@ -33,6 +33,7 @@ return [
     'voucher_not_valid'=> 'القسيمة غير صالحة',
     'voucher_expired'=> 'القسيمة منتهية',
     'voucher_limit_reached'=> 'تم الوصول إلى حد استخدام القسيمة',
+    'Notification_sent'=> 'تم ارسال الاشعار بنجاح',
 
 
 ];
