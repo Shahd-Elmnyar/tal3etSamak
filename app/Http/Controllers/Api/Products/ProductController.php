@@ -6,7 +6,6 @@ use App\Models\Cart;
 use App\Models\Product;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ProductResource;
 use App\Http\Controllers\Api\AppController;
@@ -19,23 +18,23 @@ class ProductController extends AppController
     {
         $products = $this->getProducts();
 
-
         return $this->successResponse(
-            'home.home_success',
+            null,
             [
                 'products' => ProductResource::collection($products),
                 'pagination' => $this->getPaginationData($products),
             ]
         );
     }
+
+
+
     public function show($id)
     {
         try {
             $product = Product::with('images', 'categories', 'sizes', 'additions')->findOrFail($id);
-
-
             return $this->successResponse(
-                'home.home_success',
+                null,
                 [
                     'product' => new ProductResource($product),
                     'pagination' => $this->getPaginationData($product),
@@ -45,6 +44,12 @@ class ProductController extends AppController
             return $this->notFoundResponse('home.product_not_found');
         }
     }
+
+
+
+
+
+
 
     public function search(Request $request)
     {
@@ -61,17 +66,17 @@ class ProductController extends AppController
             return $this->notFoundResponse('home.product_not_found');
         }
 
-        // Add null check here
         $productResources = $products->isNotEmpty() ? ProductResource::collection($products) : null;
 
         return $this->successResponse(
-            'home.home_success',
+            null,
             [
                 'products' => $productResources,
                 'pagination' => $this->getPaginationData($products),
             ]
         );
     }
+
 
 
     public function filter(Request $request)
@@ -88,7 +93,6 @@ class ProductController extends AppController
             'price_max' => $validated['price_max'] ?? null,
         ];
 
-
         $products = Product::filter($filters)
             ->with(['images', 'sizes', 'additions'])
             ->paginate(6);
@@ -97,21 +101,25 @@ class ProductController extends AppController
             return $this->notFoundResponse('home.product_not_found');
         }
 
-        // Add null check here
         $productResources = $products->isNotEmpty() ? ProductResource::collection($products) : null;
 
         return $this->successResponse(
-            'home.home_success',
+            null,
             [
                 'products' => $productResources,
                 'pagination' => $this->getPaginationData($products),
             ]
         );
     }
+
+
+
+
+
+
     public function addProductToCart(Request $request, $productId)
     {
         try {
-            // Validate request data
             $data = $request->validate([
                 'size_id' => 'required|exists:sizes,id',
                 'additions' => 'required|array|min:1',
@@ -120,66 +128,87 @@ class ProductController extends AppController
                 'quantity' => 'required|integer|min:1',
             ]);
 
-            // Find the product
             $product = $this->getProductById($productId);
 
-            // Check if the size exists for the product
             $this->productSizeCheck($product, $data);
 
-            foreach ($data['additions'] as $addition) {
-                if (!$this->productHasAddition($product, $addition['addition_id'])) {
-                    return $this->validationErrorResponse('home.not_addition_for_this_product');
-                }
-            }
+            $this->validateProductAdditions($product, $data);
 
-            // Calculate the total addition price
             $totalAdditionPrice = $this->totalAddition($product, $data);
 
-            // Create or find the cart and set the total_price
-            $cart = Cart::firstOrCreate(
-                ['user_id' => $request->user()->id],
-                ['total_price' => 0] // Set default total_price
-            );
+            $cart = $this->createCart($request);
 
-            // Create and save CartItem
-            $cartItem = CartItem::create([
-                'cart_id' => $cart->id,
-                'product_id' => $productId,
-                'price' => $product->price,
-                'size_id' => $data['size_id'],
-                'quantity' => $data['quantity'],
-                'addition_quantity' => array_sum(array_column($data['additions'], 'quantity')),
-                'total' => ($data['quantity'] * ($product->price + $totalAdditionPrice)),
-                'total_addition_price' => $totalAdditionPrice
-            ]);
+            $cartItem = $this->createCartItem($product, $data, $cart, $totalAdditionPrice, $productId);
 
-            // Attach additions to the product
             $this->attachProductAdditions($productId, $data);
 
-            // Update the cart's total price
             $this->updateTotalCartPrice($cart, $cartItem);
 
             return $this->successResponse(
                 'home.add_product_to_cart_success'
             );
+
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('home.product_not_found');
+
         } catch (ValidationException $e) {
-            // Debugging: Log the validation errors
+
             Log::error('Validation errors: ', ['errors' => $e->errors()]);
-            return $this->validationErrorResponse('validation_error');
+            return $this->validationErrorResponse(['errors' => $e->errors()]);
+
         } catch (\Exception $e) {
-            Log::error('General error: ', ['error' => $e->getMessage()]);
-            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
+
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
+
+
+
+    protected function validateProductAdditions($product, $data)
+    {
+        foreach ($data['additions'] as $addition) {
+            if (!$this->productHasAddition($product, $addition['addition_id'])) {
+                return $this->validationErrorResponse('home.not_addition_for_this_product');
+            }
+        }
+    }
+
+
+
+    protected function createCart($request){
+        return Cart::firstOrCreate(
+            ['user_id' => $request->user()->id],
+            ['total_price' => 0]
+        );
+    }
+
+
+    protected function createCartItem($product, $data, $cart, $totalAdditionPrice,$productId){
+        return CartItem::create([
+            'cart_id' => $cart->id,
+            'product_id' => $productId,
+            'price' => $product->price,
+            'size_id' => $data['size_id'],
+            'quantity' => $data['quantity'],
+            'addition_quantity' => array_sum(array_column($data['additions'], 'quantity')),
+            'total' => ($data['quantity'] * ($product->price + $totalAdditionPrice)),
+            'total_addition_price' => $totalAdditionPrice
+        ]);
+    }
+
+
+
+
+
+
     public function addMultipleProductsToCart(Request $request)
     {
         try {
-            // Log the incoming request data
+
             Log::info('Request data: ', $request->all());
 
-            // Validate request data
+
             $data = $request->validate([
                 'products' => 'required|array|min:1',
                 'products.*.product_id' => 'required|exists:products,id',
@@ -187,35 +216,45 @@ class ProductController extends AppController
 
             $cart = $this->findOrCreateCart();
 
-            foreach ($data['products'] as $productData) {
-                Log::info('Processing product: ', $productData);
-
-                $product = Product::findOrFail($productData['product_id']);
-
-                // Create and save CartItem
-                $cartItem = CartItem::create([
-                    'cart_id' => $cart->id,
-                    'product_id' => $product->id,
-                    'price' => $product->price,
-                    'total' => $product->price,
-                ]);
-
-                // Update the cart's total price
-                $this->updateTotalCartPrice($cart, $cartItem);
-            }
+            $this->addMultipleToCartItem($data, $cart);
 
             return $this->successResponse(
                 'home.add_product_to_cart_success'
             );
+
         } catch (ModelNotFoundException $e) {
+
             Log::error('Product not found: ', ['error' => $e->getMessage()]);
             return $this->notFoundResponse('home.product_not_found');
+
         } catch (ValidationException $e) {
+
             Log::error('Validation error: ', ['errors' => $e->errors()]);
             return $this->validationErrorResponse((object)['errors' => $e->errors()]);
+
         } catch (\Exception $e) {
-            Log::error('General error: ', ['error' => $e->getMessage()]);
-            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
+
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
+
+        }
+    }
+
+
+    protected function addMultipleToCartItem($data, $cart){
+        foreach ($data['products'] as $productData) {
+            Log::info('Processing product: ', $productData);
+
+            $product = Product::findOrFail($productData['product_id']);
+
+            $cartItem = CartItem::create([
+                'cart_id' => $cart->id,
+                'product_id' => $product->id,
+                'price' => $product->price,
+                'total' => $product->price,
+            ]);
+
+            $this->updateTotalCartPrice($cart, $cartItem);
         }
     }
 }

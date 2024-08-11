@@ -2,51 +2,72 @@
 
 namespace App\Http\Controllers\Api\Settings;
 
-use App\Http\Controllers\Api\AppController;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\helpResource;
+use App\Http\Controllers\Api\AppController;
+use Illuminate\Validation\ValidationException;
 
 class HelpController extends AppController
 {
-    public function index(){
-        $help =Page::where('page_type', 'help')->get();
-        $HelpResources = $help->isNotEmpty() ? helpResource::collection($help) : [];
+    public function index()
+    {
+        try {
+            $helpPages = Page::where('page_type', 'help')->get();
 
-        return $this->successResponse(
-            'home.home_success',
-            [
-                'help' => $HelpResources,
-            ]
-        );
+            if ($helpPages->isEmpty()) {
+                return $this->notFoundResponse('home.help_pages_not_found');
+            }
+
+            return $this->successResponse(
+                'Help pages retrieved successfully.',
+                [
+                    'help' => HelpResource::collection($helpPages),
+                ]
+            );
+        } catch (\Exception $e) {
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
+        }
     }
+
     public function search(Request $request)
     {
-        // Validate the search input
-        $validated = $request->validate([
-            'search' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'search' => 'required|string|max:255',
+            ]);
 
-        // Prepare filters
-        $filters = ['search' => $validated['search']];
+            $filters = ['search' => $validated['search']];
 
-        // Use the custom filter scope method to filter pages
-        $helpPages = Page::where('page_type', 'help')->filter($filters)->get();
+            $helpPages = Page::where('page_type', 'help')
+                ->filter($filters)
+                ->get();
 
-        // Check if any results were found
-        if ($helpPages->isEmpty()) {
-            return $this->notFoundResponse('home.request_not_found');
+            if ($helpPages->isEmpty()) {
+                return $this->notFoundResponse('home.no_help_page_match');
+            }
+
+            return $this->successResponse(
+                null,
+                [
+                    'help' => HelpResource::collection($helpPages),
+                ]
+            );
+
+        } catch (ValidationException $e) {
+
+            Log::error('Validation errors: ', ['errors' => $e->errors()]);
+            return $this->validationErrorResponse(['errors' => $e->errors()]);
+
+        } catch (\Exception $e) {
+
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
+            
         }
-
-        // If results found, create the resource collection
-        $HelpResources = helpResource::collection($helpPages);
-
-        return $this->successResponse(
-            'home.home_success',
-            [
-                'help' => $HelpResources,
-            ]
-        );
     }
+
 }
