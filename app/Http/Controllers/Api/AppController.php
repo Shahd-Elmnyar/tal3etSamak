@@ -38,19 +38,14 @@ class AppController extends MainController
 
     public function totalAddition($product, $data)
     {
-        // Initialize total addition price
-        $totalAdditionPrice = 0;
-
-        // Loop through each addition in the request data
+        $totalAdditionPrice = 0.0;
         foreach ($data['additions'] as $addition) {
-            // Check if the addition exists for the product
             $additionExists = $product->additions()->where('additions.id', $addition['addition_id'])->exists();
             if (!$additionExists) {
                 throw ValidationException::withMessages([
-                    'additions' => "Addition with ID {$addition['addition_id']} does not exist for this product."
+                    'additions' => __('home.not_addition_for_this_product'),
                 ]);
             }
-
             // Calculate the total addition price
             $totalAdditionPrice += $product->additions()
                 ->where('additions.id', $addition['addition_id'])
@@ -58,8 +53,9 @@ class AppController extends MainController
                 ->price * $addition['quantity'];
         }
 
-        return $totalAdditionPrice;
+        return $totalAdditionPrice; // Should be a float
     }
+
 
     public function findOrCreateCart(){
         // Find or create the cart
@@ -94,5 +90,9 @@ class AppController extends MainController
     public function productHasAddition($product, $additionId)
     {
         return $product->additions()->where('additions.id', $additionId)->exists();
+    }
+    public function getProductById($productId)
+    {
+        return Product::findOrFail($productId);
     }
 }

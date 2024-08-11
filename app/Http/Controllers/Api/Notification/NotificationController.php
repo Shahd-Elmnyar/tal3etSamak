@@ -21,61 +21,73 @@ class NotificationController extends AppController
     public function getNotifications(): JsonResponse
     {
         try {
-            $notifications = Notification::all(); // Retrieve all notifications
-
+            $notifications = Notification::all(); 
             return $this->successResponse(
-                'home.home_success',
+                'null',
                 NotificationResource::collection($notifications)
             );
         } catch (\Exception $e) {
-            return $this->errorResponse('home.error_retrieving_notifications');
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse('home.notification_failed');
         }
     }
 
-    public function notifyOffer(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id', // Validate input
-        ]);
 
-        try {
-            $productId = $validated['product_id'];
-            $product = Product::findOrFail($productId);
+public function notifyOffer(Request $request, Notification $notificationService): JsonResponse
+{
+    $validated = $request->validate([
+        'product_id' => 'required|integer|exists:products,id',
+    ]);
 
-            // Update the product offer status
-            $product->is_offer = true; // Or set based on input
-            $product->save();
+    try {
+        $productId = $validated['product_id'];
+        $product = $this->getProductById($productId);
 
-            $locale = Auth::user()->lang ?? config('app.fallback_locale');
-            // Extract product name based on the preferred language (e.g., English or Arabic)
-            $productName = $product->name[$locale] ?? 'Product Name'; // Fallback to 'Product Name' if locale is not available
 
-            // Create a beautifully formatted notification message
-            $message = sprintf(
-                'Product "%s" is now on offer! Original Price: $%s, Offer Price: $%s',
-                $productName,
-                number_format($product->price, 2),
-                number_format($product->offer_price, 2)
-            );
+        $product->is_offer = true;
+        $product->save();
 
-            // Create a notification record
-            Notification::create([
+        $locale = Auth::user()->lang ?? config('app.fallback_locale');
+
+        $productName = $this->getProductNameByLocale($product, $locale);
+
+
+        $message = $this->formatOfferMessage($productName, $product->price, $product->offer_price);
+
+
+        Notification::create([
                 'product_id' => $product->id,
                 'type' => 'ProductOfferUpdated',
-                'data' => $message, // Save the formatted message
-            ]);
+                'data' => $message
+        ]);
 
-            // Trigger the event
-            event(new ProductOfferUpdated($product));
 
-            return $this->successResponse('home.Notification_sent');
-        } catch (ModelNotFoundException $e) {
-            return $this->notFoundResponse('home.product_not_found');
-        } catch (ValidationException $e) {
-            return $this->validationErrorResponse((object)['errors' => $e->errors()]);
-        } catch (Exception $e) {
-            Log::error('HomeController error: ' . $e->getMessage());
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
-        }
+        event(new ProductOfferUpdated($product));
+
+        return $this->successResponse('home.Notification_sent');
+    } catch (ModelNotFoundException $e) {
+        return $this->notFoundResponse('home.product_not_found');
+    } catch (ValidationException $e) {
+        return $this->validationErrorResponse(['errors' => $e->errors()]);
+    } catch (Exception $e) {
+        Log::error('General error : ' . $e->getMessage());
+        return $this->genericErrorResponse();
     }
+}
+
+private function getProductNameByLocale(Product $product, string $locale): string
+{
+    return $product->name[$locale] ?? __('Product Name');
+}
+
+private function formatOfferMessage(string $productName, float $originalPrice, float $offerPrice): string
+{
+    return sprintf(
+        __('Product "%s" is now on offer! Original Price: $%s, Offer Price: $%s'),
+        $productName,
+        number_format($originalPrice, 2),
+        number_format($offerPrice, 2)
+    );
+}
+
 }

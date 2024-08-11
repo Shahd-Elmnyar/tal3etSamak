@@ -16,10 +16,9 @@ class StripePaymentController extends AppController
         try {
             $stripe = new StripeClient(env('STRIPE_SECRET'));
 
-            // Use a test token instead of card details
-            $testToken = 'tok_visa'; // This is a predefined test token
+            $testToken = 'tok_visa';
 
-            // Use the token to create a charge
+
             $response = $stripe->charges->create([
                 'amount' => $request->amount,
                 'currency' => 'egp',
@@ -28,7 +27,7 @@ class StripePaymentController extends AppController
             ]);
 
             $cart = Cart::where('user_id', $this->user->id)->first();
-            // Clear the cart
+            
             $cart->cartItems()->delete();
             $cart->delete();
             $order = Order::findOrFail($orderId);
@@ -37,10 +36,8 @@ class StripePaymentController extends AppController
 
             return $this->successResponse('home.payment_success', $response->status);
         } catch (\Exception $e) {
-            // Log the error for debugging
-            Log::error('Stripe Payment Error: ' . $e->getMessage());
-
-            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 }

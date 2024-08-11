@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -18,11 +19,17 @@ class MainController extends BaseController
             'errors' =>__($message),
         ], 404);
     }
-    public function genericErrorResponse($message)
+    public function genericErrorResponse($message=null)
     {
+        if ($message) {
+            return response()->json([
+                'code' => 'error',
+                'errors' => __($message),
+            ], 500);
+        }
         return response()->json([
             'code' => 'error',
-            'errors' => __($message) ,
+            'errors' => __('auth.error_occurred'),
         ], 500);
     }
     public function checkAuthorization($request){
@@ -42,29 +49,45 @@ class MainController extends BaseController
     }
     public function validationErrorResponse($message)
     {
+        // Attempt to process the error message
+        if (is_array($message)) {
+
+            // Check if 'errors' key exists in the array
+            if (isset($message['errors'])) {
+                $errors = $message['errors'];
+            } else {
+                throw new \Exception('The array does not contain an "errors" key.');
+            }
+        } else {
+            // Handle the non-array message
+            $errors = __($message);
+        }
         return response()->json([
             'code' => 'error',
             'message' => 'validation_error',
-            'errors' => __($message),
+            'errors' => $errors,
         ], 422);
     }
-    public function successResponse($message, $data = null)
-    {
-        $responseData = [
-            'code' => 'success',
-            'message' => __($message),
-        ];
 
+
+    public function successResponse($message=null, $data = null)
+    {
+        if ($message ) {
+            $responseData = [
+                'code' => 'success',
+                'message' => __($message),
+            ];
+        }else{
+            $responseData = [
+                'code' => 'success',
+                'message' => __('home.home_success'),
+            ];
+        }
         if ($data !== null) {
             $responseData['data'] = $data;
         }
 
         return response()->json($responseData, 200);
-    }
-    public function emptyResponse($data,$message){
-        if ($data->isEmpty()) {
-            return $this->notFoundResponse(__($message));
-        }
     }
     public function getPaginationData($products)
     {
@@ -80,9 +103,4 @@ class MainController extends BaseController
         }
         return [];
     }
-    public function getProductById($productId)
-    {
-        return Product::findOrFail($productId);
-    }
-
 }
