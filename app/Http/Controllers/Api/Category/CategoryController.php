@@ -5,44 +5,40 @@ namespace App\Http\Controllers\Api\Category;
 use Exception;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
-
-
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Controllers\Api\AppController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CategoryController extends AppController
 {
 
-
-    public function index(Request $request)
+    public function index(): JsonResponse
     {
         try {
             $mainCategories = $this->getMainCategories();
             $subCategories = $this->getSubCategories();
-            // dd($subCategories);
             $products = $this->getProducts();
 
             return $this->successResponse(
-                __('home.home_success'),
+                null,
                 [
                     'main_categories' => CategoryResource::collection($mainCategories),
-                    'main_pagination' => $this->getPaginationData($mainCategories),
                     'sub_categories' => CategoryResource::collection($subCategories),
-                    'sub_pagination' => $this->getPaginationData($subCategories),
                     'products' => ProductResource::collection($products),
                     'products_pagination' => $this->getPaginationData($products),
                 ]
             );
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('CategoryController error: ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 
-    public function show($id, $subCategoryId = null)
+    public function show(int $id, ?int $subCategoryId = null): JsonResponse
     {
         try {
             $category = $this->getCategoryWithRelations($id);
@@ -51,7 +47,7 @@ class CategoryController extends AppController
                 $subCategory = $this->getSubCategoryWithRelations($category, $subCategoryId);
 
                 return $this->successResponse(
-                    __('home.home_success'),
+                    null,
                     ['category' => new CategoryResource($subCategory)]
                 );
             }
@@ -59,43 +55,44 @@ class CategoryController extends AppController
             $products = $this->getProductsForCategory($category);
 
             return $this->successResponse(
-                __('home.home_success'),
+                null,
                 ['category' => new CategoryResource($category->setRelation('products', $products))]
             );
         } catch (ModelNotFoundException $e) {
+            Log::warning('Category not found: ' . $e->getMessage());
             return $this->notFoundResponse(__('home.category_not_found'));
         } catch (Exception $e) {
-            Log::error('HomeController error: ' . $e->getMessage());
-            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
+            Log::error('CategoryController error: ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 
     private function getMainCategories()
     {
-        return Category::with(['children'])
+        return Category::with('children')
             ->whereDoesntHave('parent')
             ->get();
     }
 
     private function getSubCategories()
     {
-        return Category::with(['parent'])
+        return Category::with('parent')
             ->whereHas('parent')
             ->get();
     }
 
-    private function getCategoryWithRelations($id)
+    private function getCategoryWithRelations(int $id): Category
     {
         return Category::with(['parent', 'children', 'products'])->findOrFail($id);
     }
 
-    private function getSubCategoryWithRelations($category, $subCategoryId)
+    private function getSubCategoryWithRelations(Category $category, int $subCategoryId): Category
     {
         return $category->children()->with(['products.images', 'products.sizes', 'products.additions'])
             ->findOrFail($subCategoryId);
     }
 
-    private function getProductsForCategory($category)
+    private function getProductsForCategory(Category $category): LengthAwarePaginator
     {
         $childCategoryIds = $category->children->pluck('id');
         $allProductIds = $category->products->pluck('id')
@@ -111,4 +108,5 @@ class CategoryController extends AppController
             ->with(['images', 'sizes', 'additions'])
             ->paginate(6);
     }
+
 }
