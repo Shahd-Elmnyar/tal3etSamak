@@ -23,7 +23,6 @@ class ForgetPasswordController  extends MainController
                 return $this->notFoundResponse( 'auth.user_not_found');
             }
 
-            // Send the notification
             $notification = new ResetPasswordVerificationNotification();
             if (!$user->notify($notification)) {
                 return $this->successResponse( 'auth.notification_success');
@@ -32,9 +31,8 @@ class ForgetPasswordController  extends MainController
                 return $this->genericErrorResponse( 'home.notification_failed');
             }
         } catch (\Exception $e) {
-            Log::error('Error during forget password process: ' . $e->getMessage());
-
-            return $this->genericErrorResponse( 'auth.error_occurred', ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 }
