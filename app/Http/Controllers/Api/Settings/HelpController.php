@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Settings;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\helpResource;
 use App\Http\Controllers\Api\AppController;
 use Illuminate\Validation\ValidationException;
@@ -66,7 +65,7 @@ class HelpController extends AppController
 
             Log::error('General error : ' . $e->getMessage());
             return $this->genericErrorResponse();
-            
+
         }
     }
 

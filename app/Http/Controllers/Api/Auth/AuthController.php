@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api\Auth;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\LoginRequest;
@@ -15,9 +14,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\MainController;
-use Illuminate\Support\Facades\App; // Add this line
 
 class AuthController extends MainController
 {

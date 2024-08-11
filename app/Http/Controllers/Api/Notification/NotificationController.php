@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Events\ProductOfferUpdated;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Resources\NotificationResource;
@@ -21,7 +20,7 @@ class NotificationController extends AppController
     public function getNotifications(): JsonResponse
     {
         try {
-            $notifications = Notification::all(); 
+            $notifications = Notification::all();
             return $this->successResponse(
                 'null',
                 NotificationResource::collection($notifications)

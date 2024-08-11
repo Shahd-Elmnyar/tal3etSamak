@@ -3,11 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\User;
-use App\Exceptions\Handler;
-use Illuminate\Http\Request;
-use App\Http\Responses\ApiResponse;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\MainController;
 use App\Http\Requests\ForgetPasswordRequest;
 use App\Notifications\ResetPasswordVerificationNotification;
