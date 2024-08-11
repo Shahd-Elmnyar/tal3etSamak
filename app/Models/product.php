@@ -89,16 +89,16 @@ class Product extends Model
         return $this->belongsToMany(Addition::class, 'user_product_addition')
             ->withPivot('quantity')
             ->withTimestamps();
+        }
+    public static function getTotalQuantities(){
+            return self::select('products.*', DB::raw('SUM(order_items.quantity) as total_quantity'))
+                ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+                ->groupBy('products.id', 'products.name', 'products.content', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.is_offer', 'products.is_sale', 'products.active', 'products.start', 'products.skip', 'products.created_at', 'products.updated_at')
+                ->orderByDesc('total_quantity')
+                ->limit(2)
+                ->with(['additions', 'images', 'sizes', 'categories'])
+                ->get();
     }
-  public static function getTotalQuantities(){
-        return self::select('products.*', DB::raw('SUM(order_items.quantity) as total_quantity'))
-            ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
-            ->groupBy('products.id', 'products.name', 'products.content', 'products.price', 'products.offer_price', 'products.discount_type', 'products.discount', 'products.is_offer', 'products.is_sale', 'products.active', 'products.start', 'products.skip', 'products.created_at', 'products.updated_at')
-            ->orderByDesc('total_quantity')
-            ->limit(2)
-            ->with(['additions', 'images', 'sizes', 'categories'])
-            ->get();
-  }
 
 
     public function getTotalAdditionPrice()

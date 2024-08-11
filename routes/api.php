@@ -36,7 +36,7 @@ Route::middleware('lang')->group(function () {
     Route::apiResource('auth', AuthController::class);
     Route::apiResource('validate-otp', ValidateOtpController::class);
     Route::apiResource('forget-password', ForgetPasswordController::class);
-    Route::apiResource('update-password', UpdatePasswordController::class);
+    Route::post('update-password', [UpdatePasswordController::class,'store']);
     Route::post('login', [AuthController::class, 'login'])->name('login');
 
     Route::middleware('auth:sanctum')->group(function () {
