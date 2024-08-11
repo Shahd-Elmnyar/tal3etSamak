@@ -7,14 +7,12 @@ use Exception;
 use App\Models\Product;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 
 class FavoriteController extends AppController
 {
-    public function index(Request $request)
+    public function index()
     {
         try {
             $favoriteProducts = $this->getUserFavoriteProducts($this->user->id);
@@ -23,24 +21,20 @@ class FavoriteController extends AppController
             }
 
             return $this->successResponse(
-                'home.home_success',
-                [
-                    ProductResource::collection($favoriteProducts)
-                ]
+                null,
+                ProductResource::collection($favoriteProducts)
             );
         } catch (Exception $e) {
-            Log::error('Error during forget password process: ' . $e->getMessage());
-
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('General error: ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 
     private function getUserFavoriteProducts($userId)
     {
-        return Favorite::with('product')
-            ->where('user_id', $userId)
-            ->get()
-            ->pluck('product');
+        return Product::whereHas('favorites', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
     }
 
     public function store(Request $request)
@@ -52,14 +46,9 @@ class FavoriteController extends AppController
             }
 
             // Check if the product is already in favorites
-            $alreadyFavorited = Favorite::where('user_id', $this->user->id)
-                ->where('product_id', $request->product_id)
-                ->exists();
-            if ($alreadyFavorited) {
-                return response()->json([
-                    'code' => 'ERROR',
-                    'data' => __('home.PRODUCT_ALREADY_FAVORITED'),
-                ], 422);
+            $alreadyFavorite = $this->getProductFavorite($this->user->id, $request->product_id);
+            if ($alreadyFavorite) {
+                return $this->validationErrorResponse('home.PRODUCT_ALREADY_FAVORITE');
             }
 
             $favorite = Favorite::firstOrCreate([
@@ -72,26 +61,33 @@ class FavoriteController extends AppController
                 [new ProductResource($favorite->product)]
             );
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
+    }
+
+    private function getProductFavorite($userId, $productId)
+    {
+        return Favorite::where('user_id', $userId)
+            ->where('product_id', $productId)
+            ->first();
     }
 
     public function destroy($id)
     {
         try {
 
-            $favorite = Favorite::where('user_id', $this->user->id)
-                ->where('product_id', $id)
-                ->first();
+            $favorite = $this->getProductFavorite($this->user->id, $id);
 
             if ($favorite) {
                 $favorite->delete();
                 return $this->successResponse('home.PRODUCT_REMOVED');
             } else {
-                return $this->notFoundResponse('home.PRODUCT_NOT_FAVORITED');
+                return $this->notFoundResponse('home.PRODUCT_NOT_FAVORITE');
             }
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
     public function destroyAll()
@@ -105,7 +101,8 @@ class FavoriteController extends AppController
                 return $this->notFoundResponse('home.NO_FAVORITES_TO_REMOVE');
             }
         } catch (Exception $e) {
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 }

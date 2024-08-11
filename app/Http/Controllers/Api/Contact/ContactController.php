@@ -6,7 +6,6 @@ use Exception;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\AppController;
 use Illuminate\Validation\ValidationException;
 
@@ -18,7 +17,6 @@ class ContactController extends AppController
             'title' => 'required|string|max:255',
             'content' => 'required|string|max:255',
         ]);
-
         Message::create([
             'title' => $request->title,
             'content' => $request->content,
@@ -28,11 +26,10 @@ class ContactController extends AppController
         return $this->successResponse('home.contact_success');
         }catch (ValidationException $e){
             Log::error('Validation error: ', ['errors' => $e->errors()]);
-            return $this->validationErrorResponse((object)['errors' => $e->errors()]);
+            return $this->validationErrorResponse(['errors' => $e->errors()]);
         }catch(Exception $e){
-            Log::error('contact error: ' . $e->getMessage());
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
-
     }
 }

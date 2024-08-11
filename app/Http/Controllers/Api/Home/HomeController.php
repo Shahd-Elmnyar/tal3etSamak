@@ -19,14 +19,20 @@ class HomeController extends AppController
             $trendMeals = Product::getTotalQuantities();
             $topDiscountedProducts = $this->getTopDiscountedProducts();
             $categories = $this->getCategories();
+            if ($trendMeals->isEmpty()) {
+                return $this->notFoundResponse(__('home.no_trend_meals_found'));
+            }
 
-            // Handle empty responses
-            $this->emptyResponse($trendMeals, 'home.no_trend_meals_found');
-            $this->emptyResponse($topDiscountedProducts, 'home.no_discounted_products_found');
-            $this->emptyResponse($categories, 'home.no_categories_found');
+            if ($topDiscountedProducts->isEmpty()) {
+                return $this->notFoundResponse(__('home.no_discounted_products_found'));
+            }
+
+            if ($categories->isEmpty()) {
+                return $this->notFoundResponse(__('home.no_categories_found'));
+            }
 
             return $this->successResponse(
-                __('home.home_success'),
+                null,
                 [
                     'trend_meals' => ProductResource::collection($trendMeals),
                     'top_discounted_products' => ProductResource::collection($topDiscountedProducts),
@@ -34,8 +40,8 @@ class HomeController extends AppController
                 ]
             );
         } catch (Exception $e) {
-            Log::error('HomeController error: ' . $e->getMessage());
-            return $this->genericErrorResponse(__('auth.error_occurred'), ['error' => $e->getMessage()]);
+            Log::error('General error : ' . $e->getMessage());
+            return $this->genericErrorResponse();
         }
     }
 
