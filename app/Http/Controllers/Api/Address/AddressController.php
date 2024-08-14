@@ -6,7 +6,6 @@ use Exception;
 use App\Models\Address;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\AddressResource;
-use Illuminate\Database\QueryException;
 use App\Http\Controllers\Api\AppController;
 use App\Http\Requests\UpdateAddressRequest;
 use App\Http\Requests\AddressRequest;

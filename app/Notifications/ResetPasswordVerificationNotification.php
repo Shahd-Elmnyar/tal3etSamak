@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Models\PasswordReset;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -45,6 +47,12 @@ class ResetPasswordVerificationNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $otp = $this->otp->generate($notifiable->email, 'numeric', 6, 60);
+        $dateTime = Carbon::now()->format('Y-m-d H:i:s');
+        PasswordReset::updateOrCreate(
+            ['email' => $notifiable->email],
+            [
+                'token' => $otp->token ,
+                'created_at' => $dateTime]);
         return (new MailMessage)
                 ->mailer('smtp')
                 ->subject($this->subject)
@@ -55,7 +63,7 @@ class ResetPasswordVerificationNotification extends Notification
                 ->greeting('hello ' . $notifiable->username)
                 ->line($this->message)
                 ->line('code: ' . $otp->token)
-                ->salutation('Best regards, Store-ify Team');
+                ->salutation('Best regards, Tal3et Samak Team');
     }
 
     /**
